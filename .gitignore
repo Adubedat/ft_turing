@@ -1,0 +1,8 @@
+*.cmx
+*.cmi
+.*.swp
+*.o
+a.out
+test
+*.cmo
+._d
