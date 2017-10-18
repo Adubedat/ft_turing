@@ -1,0 +1,7 @@
+(transition state, cell read) -> (next transition, cell write, go to)
+111-11=
+(scanright, =) -> transition to (eraseone, ., LEFT)
+(eraseone, 1) -> transition to (subone, =, LEFT)
+(subone, -) -> transition to (skip, -, lEFT)
+(skip, 1) -> transition to (scanright, ., RIGHT)
+(eraseone, -) -> transition to (HALT, ., lEFT)
