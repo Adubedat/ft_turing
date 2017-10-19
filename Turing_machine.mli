@@ -10,3 +10,5 @@ val states: state list
 val initial: state
 val finals: state list
 val transitions: (state * transition list) list
+
+val print_intro: unit
