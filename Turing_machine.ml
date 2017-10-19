@@ -30,25 +30,14 @@ let print_transitions () =
         if ac = Right then "Right" else "Left"
     in
     let rec parse_trs rd_tr_name trs_lst =
-        match trs_lst with
-            | [] -> ()
-            | head::tail -> (
-                match head with 
-                   | {read=rd; to_state=st; write=wr; action=ac} -> (
-                        Printf.printf ("(%s, %c) -> (%s, %c, %s)\n")
-                            (rd_tr_name) (rd) (st) (wr) (ac_to_str(ac));
-                        parse_trs rd_tr_name tail
-                    )
+        List.iter (fun x -> match x with
+           | {read=rd; to_state=st; write=wr; action=ac} -> (
+                Printf.printf ("(%s, %c) -> (%s, %c, %s)\n")
+                    (rd_tr_name) (rd) (st) (wr) (ac_to_str(ac));
             )
+        ) trs_lst
     in
-    let rec parse_trs_info trsinfo_lst =
-        match trsinfo_lst with
-            | [] -> ()
-            | head::tail -> (
-                parse_trs (fst head) (snd head);
-                parse_trs_info tail
-            )
-    in parse_trs_info transitions
+    List.iter (fun x -> parse_trs (fst x) (snd x)) transitions
 
 let print_intro =
     Printf.printf "\t\t\t\t\t{--[  %s  ]--}\t\t\t\t\t\n" (name);
