@@ -1,4 +1,3 @@
-(* add module struct end if multiples modules *)
 type letter = char
 type state = string
 type direction = Right | Left
