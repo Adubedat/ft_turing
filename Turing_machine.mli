@@ -1,8 +1,7 @@
-(* add module sig end if multiples modules *)
-type letter
-type state
-type direction
-type transition
+type letter = char
+type state = string
+type direction = Right | Left
+type transition = {read: letter; to_state: state; write: letter; action: direction}
 
 val name: string
 val alphabet: letter list
