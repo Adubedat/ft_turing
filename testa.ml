@@ -16,12 +16,18 @@ let rec print_char_list lst =
         | head :: tail -> print_char head; print_string " -> "; print_char_list tail
         | [] -> print_string "[]"
 
+let rec print_string_list lst =
+    match lst with
+        | head :: tail -> print_string head; print_string " -> "; print_string_list tail
+        | [] -> print_string "[]"
+
+
 let () =
-    begin try
-        print_endline (Yojson.Basic.pretty_to_string (Parsing.json_file));
-        print_endline Parsing.name;
-        print_char_list Parsing.alphabet; print_char '\n';
-        print_char Parsing.blank; print_char '\n'
+    try
+        begin
+  (*          print_endline Parsing.name;
+            print_char_list Parsing.alphabet; print_char '\n';
+            print_char Parsing.blank; print_char '\n'; *)
+        end
     with
         | exn -> print_endline "Error"
-    end
