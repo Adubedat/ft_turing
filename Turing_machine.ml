@@ -25,19 +25,29 @@ let transitions = [
     ])
 ]
 
+let ac_to_str ac = 
+    if ac = Right then "RIGHT" else "LEFT"
+
 let print_transitions () =
-    let ac_to_str ac = 
-        if ac = Right then "Right" else "Left"
-    in
     let rec parse_trs rd_tr_name trs_lst =
         List.iter (fun x -> match x with
            | {read=rd; to_state=st; write=wr; action=ac} -> (
-                Printf.printf ("(%s, %c) -> (%s, %c, %s)\n")
+                Printf.printf "(%s, %c) -> (%s, %c, %s)\n"
                     (rd_tr_name) (rd) (st) (wr) (ac_to_str(ac));
             )
         ) trs_lst
     in
     List.iter (fun x -> parse_trs (fst x) (snd x)) transitions
+
+let print_cur_transition tr_name rd_letter =
+    let parse_trs trs_lst =
+        List.iter (fun x -> match x with
+            | {read=rd; to_state=st; write=wr; action=ac} when rd = rd_letter -> (
+                Printf.printf "(%s, %c) -> (%s, %c, %s)\n" (tr_name) (rd) (st) (wr) (ac_to_str(ac)) )
+            | {read=rd; to_state=st; write=wr; action=ac} -> ()
+            ) trs_lst
+    in
+    List.iter (fun x -> if (fst x) = tr_name then parse_trs (snd x)) transitions
 
 let print_intro =
     Printf.printf "\t\t\t\t{--[  %s  ]--}\n" (name);
@@ -45,7 +55,7 @@ let print_intro =
     print_string "States : [ "; Print.str_list (states); print_endline " ]";
     Printf.printf "Initial : %s\n" (initial);
     print_string "Finals : [ "; Print.str_list (finals); print_endline " ]";
-    print_transitions (); (* if not () print_transitions is print before first printf above oO *)
+    print_transitions ();
     print_endline "-------------------------------------------------------------"
 
 let launch_tape =
@@ -57,12 +67,16 @@ let launch_tape =
         in exp (String.length s - 1) []
     in
     (*maybe error check(Sys.arv.(1)) in other place*)
-    let tape = explode Sys.argv.(1) in
+    let tape = explode Sys.argv.(1) in (* typeof tape = *)
     let pos = 0 in
+    let cur_transition = initial in
+    let cur_rd = List.nth tape pos in
     let print_tape cur_tape cur_pos =
         print_char '[';
         List.iteri (fun i x -> if i = cur_pos then Printf.printf "<%c>" (x)
-                        else print_char x) cur_tape
+            else print_char x) cur_tape;
+        print_string "..................] ";
+        print_cur_transition cur_transition cur_rd
         (* Printf.printf "..................] (%s, %c) -> (%s, %c, %s)" *)
         (* parse rd + wr part then keep wr for next print if wr != HALT *)
     in
