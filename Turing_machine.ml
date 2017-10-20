@@ -2,6 +2,7 @@ type letter = char
 type state = string
 type direction = Right | Left
 type transition = {read: letter; to_state: state; write: letter; action: direction}
+type md_tape = {pos: int; trs: state; read: letter} (* md = metadata *)
 
 (* Below is an example, normally field are filled by json parsing *)
 let name = "unary_sub"
@@ -39,15 +40,15 @@ let print_transitions () =
     in
     List.iter (fun x -> parse_trs (fst x) (snd x)) transitions
 
-let print_cur_transition tr_name rd_letter =
+let print_cur_transition tape =
     let parse_trs trs_lst =
         List.iter (fun x -> match x with
-            | {read=rd; to_state=st; write=wr; action=ac} when rd = rd_letter -> (
-                Printf.printf "(%s, %c) -> (%s, %c, %s)\n" (tr_name) (rd) (st) (wr) (ac_to_str(ac)) )
+            | {read=rd; to_state=st; write=wr; action=ac} when rd = tape.read -> (
+                Printf.printf "(%s, %c) -> (%s, %c, %s)\n" (tape.trs) (rd) (st) (wr) (ac_to_str(ac)) )
             | {read=rd; to_state=st; write=wr; action=ac} -> ()
             ) trs_lst
     in
-    List.iter (fun x -> if (fst x) = tr_name then parse_trs (snd x)) transitions
+    List.iter (fun x -> if (fst x) = tape.trs then parse_trs (snd x)) transitions
 
 let print_intro =
     Printf.printf "\t\t\t\t{--[  %s  ]--}\n" (name);
@@ -58,27 +59,32 @@ let print_intro =
     print_transitions ();
     print_endline "-------------------------------------------------------------"
 
+let get_tape pos transition read_letter =
+    {
+        pos = pos;
+        trs = transition;
+        read = read_letter
+    }
+
 let launch_tape =
+    (*maybe error check(Sys.arv.(1)) in other place*)
     if Array.length Sys.argv != 2 then
         exit 0;
-	let explode s =
-		let rec exp i l =
-			if i < 0 then l else exp (i - 1) (s.[i] :: l)
+    let explode s =
+        let rec exp i l =
+            if i < 0 then l else exp (i - 1) (s.[i] :: l)
         in exp (String.length s - 1) []
     in
-    (*maybe error check(Sys.arv.(1)) in other place*)
-    let tape = explode Sys.argv.(1) in (* typeof tape = *)
-    let pos = 0 in
-    let cur_transition = initial in
-    let cur_rd = List.nth tape pos in
-    let print_tape cur_tape cur_pos =
+    let print_tape tape_letters tape =
         print_char '[';
-        List.iteri (fun i x -> if i = cur_pos then Printf.printf "<%c>" (x)
-            else print_char x) cur_tape;
+        List.iteri (fun i x -> if i = tape.pos then Printf.printf "<%c>" (x)
+            else print_char x) tape_letters;
         print_string "..................] ";
-        print_cur_transition cur_transition cur_rd
+        print_cur_transition tape
         (* Printf.printf "..................] (%s, %c) -> (%s, %c, %s)" *)
         (* parse rd + wr part then keep wr for next print if wr != HALT *)
     in
-    print_tape tape pos
+    let tape_letters = explode Sys.argv.(1) in
+    let tape = get_tape 0 initial (List.nth tape_letters 0) in
+    print_tape tape_letters tape
     (*print current_tape then modify char list in consequence of write transition*)
