@@ -2,7 +2,7 @@ type letter = char
 type state = string
 type direction = Right | Left
 type transition = {read: letter; to_state: state; write: letter; action: direction}
-type md_tape = {pos: int; trs: state; read: letter} (* md = metadata *)
+type md_tape = {letters: letter list; pos: int; trs: state; read: letter} (* md = metadata *)
 
 (* Below is an example, normally field are filled by json parsing *)
 let name = "unary_sub"
@@ -59,32 +59,66 @@ let print_intro =
     print_transitions ();
     print_endline "-------------------------------------------------------------"
 
-let get_tape pos transition read_letter =
+let get_tape letters pos transition read_letter =
     {
+        letters = letters;
         pos = pos;
         trs = transition;
         read = read_letter
     }
 
 let launch_tape =
-    (*maybe error check(Sys.arv.(1)) in other place*)
-    if Array.length Sys.argv != 2 then
-        exit 0;
     let explode s =
         let rec exp i l =
             if i < 0 then l else exp (i - 1) (s.[i] :: l)
         in exp (String.length s - 1) []
     in
-    let print_tape tape_letters tape =
+    let print_tape tape =
         print_char '[';
         List.iteri (fun i x -> if i = tape.pos then Printf.printf "<%c>" (x)
-            else print_char x) tape_letters;
+            else print_char x) tape.letters;
         print_string "..................] ";
         print_cur_transition tape
-        (* Printf.printf "..................] (%s, %c) -> (%s, %c, %s)" *)
         (* parse rd + wr part then keep wr for next print if wr != HALT *)
     in
-    let tape_letters = explode Sys.argv.(1) in
-    let tape = get_tape 0 initial (List.nth tape_letters 0) in
-    print_tape tape_letters tape
+    let get_next_transition tape =
+        let parse_trs trs_lst =
+            List.iter (fun x -> match x with
+                | {read=rd; to_state=st; write=wr; action=ac} when rd = tape.read -> st
+                | {read=rd; to_state=st; write=wr; action=ac} -> ""
+                ) trs_lst
+        in
+        List.iter (fun x -> if (fst x) = tr_name then parse_trs (snd x)) transitions
+    in
+    let get_letter_to_wr tape =
+        let parse_trs trs_lst =
+            List.iter (fun x -> match x with
+                | {read=rd; to_state=st; write=wr; action=ac} when rd = tape.read -> wr
+                | {read=rd; to_state=st; write=wr; action=ac} -> '0'
+                ) trs_lst
+        in
+        List.iter (fun x -> if (fst x) = tr_name then parse_trs (snd x)) transitions
+    in
+    let get_pos tape =
+        let parse_trs trs_lst =
+            List.iter (fun x -> match x with
+                | {read=rd; to_state=st; write=wr; action=ac} when rd = tape.read -> (
+                    if ac = Left then tape.pos + 1 else tape.pos - 1
+                )
+                | {read=rd; to_state=st; write=wr; action=ac} -> -1
+                ) trs_lst
+        in
+        List.iter (fun x -> if (fst x) = tr_name then parse_trs (snd x)) transitions
+    in
+
+    let tape = get_tape (explode Sys.argv.(1)) 0 initial (List.nth (explode Sys.argv.(1)) 0) in
+    let write_tape tape =
+        print_tape tape;
+        (* let next_trs = get_next_transition tape in *)
+        (* let letter_to_wr = get_letter_to_wr tape in *)
+        (* let pos = get_pos tape in *)
+        (* let tape = get_tape tape.letters pos next_trs letter_to_wr in *)
+        ()
+    in
+    write_tape tape
     (*print current_tape then modify char list in consequence of write transition*)
