@@ -12,3 +12,4 @@ val finals: state list
 val transitions: (state * transition list) list
 
 val print_intro: unit
+val launch_tape: unit
