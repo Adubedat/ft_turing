@@ -64,6 +64,7 @@ let launch_tape =
         List.iteri (fun i x -> if i = cur_pos then Printf.printf "<%c>" (x)
                         else print_char x) cur_tape
         (* Printf.printf "..................] (%s, %c) -> (%s, %c, %s)" *)
+        (* parse rd + wr part then keep wr for next print if wr != HALT *)
     in
     print_tape tape pos
     (*print current_tape then modify char list in consequence of write transition*)
