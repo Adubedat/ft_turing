@@ -50,16 +50,6 @@ let print_transitions () =
     in
     List.iter (fun x -> parse_trs (fst x) (snd x)) transitions
 
-let print_cur_transition tape =
-    let parse_trs trs_lst =
-        List.iter (fun x -> match x with
-            | {read=rd; to_state=st; write=wr; action=ac} when rd = tape.lread -> (
-                Printf.printf "(%s, %c) -> (%s, %c, %s)\n" (tape.trs) (rd) (st) (wr) (ac_to_str(ac)) )
-            | {read=rd; to_state=st; write=wr; action=ac} -> ()
-            ) trs_lst
-    in
-    List.iter (fun x -> if (fst x) = tape.trs then parse_trs (snd x)) transitions
-
 let print_intro =
     Printf.printf "\t\t\t\t{--[  %s  ]--}\n" (name);
     print_string "Alphabet : [ "; Print.char_list (alphabet); print_endline " ]";
@@ -83,13 +73,24 @@ let launch_tape =
             lread = read_letter
         }
     in
+    let print_transition tape =
+        let parse_trs trs_lst =
+            List.iter (fun x -> match x with
+                | {read=rd; to_state=st; write=wr; action=ac} when rd = tape.lread -> (
+                    Printf.printf "(%s, %c) -> (%s, %c, %s)\n"
+                        (tape.trs) (rd) (st) (wr) (ac_to_str(ac))
+                )
+                | {read=rd; to_state=st; write=wr; action=ac} -> ()
+                ) trs_lst
+        in
+        List.iter (fun x -> if (fst x) = tape.trs then parse_trs (snd x)) transitions
+    in
     let print_tape tape =
         print_char '[';
         List.iteri (fun i x -> if i = tape.pos then Printf.printf "<%c>" (x)
             else print_char x) tape.letters;
         print_string "..................] ";
-        print_cur_transition tape
-        (* parse rd + wr part then keep wr for next print if wr != HALT *)
+        print_transition tape
     in
     let get_next_transition tape =
         let trs_lst = List.find (fun x -> (fst x) = tape.trs) transitions in
@@ -110,15 +111,14 @@ let launch_tape =
         List.mapi (fun i x -> if i = tape.pos then wr_letter else x) tape.letters
     in
     let init_tape = get_tape (explode Sys.argv.(1)) 0 initial (List.nth (explode Sys.argv.(1)) 0) in
-    let rec write_tape tape test_nb =
-        if test_nb < 12 then (
-            print_tape tape;
-            let next_trs = get_next_transition tape in
-            let letter_to_wr = get_letter_to_wr tape in
-            let pos = get_pos tape in
-            let tape_letters = get_letters tape letter_to_wr in
-            write_tape (get_tape tape_letters pos next_trs (List.nth tape_letters pos)) (test_nb + 1)
-        )
+    let rec write_tape tape =
+        print_tape tape;
+        let next_trs = get_next_transition tape in
+        if next_trs = (List.hd finals) then
+            exit 0;
+        let letter_to_wr = get_letter_to_wr tape in
+        let pos = get_pos tape in
+        let tape_letters = get_letters tape letter_to_wr in
+        write_tape (get_tape tape_letters pos next_trs (List.nth tape_letters pos))
     in
-    write_tape init_tape 0
-    (*print current_tape then modify char list in consequence of write transition*)
+    write_tape init_tape
