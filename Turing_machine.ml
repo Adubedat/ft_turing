@@ -2,13 +2,14 @@ type letter = char
 type state = string
 type direction = Right | Left
 type transition = {read: letter; to_state: state; write: letter; action: direction}
-type md_tape = {letters: letter list; pos: int; trs: state; lread: letter} (* md = metadata *)
+type tape_data = {letters: letter list; pos: int; trs: state; lread: letter}
 
 (* Below is an example, normally field are filled by json parsing *)
-let name = "unary_sub"
-let alphabet = ['1'; '.'; '-'; '=']
+(* examples are in testr.ml *)
+let name = "unary_add"
+let alphabet = ['1'; '.'; '+'; '=']
 let blank = '.'
-let states = ["scanright"; "eraseone"; "subone"; "skip"; "HALT"]
+let states = ["scanright"; "addone"; "HALT"]
 let initial = "scanright"
 let finals = ["HALT"]
 let transitions = [
@@ -16,24 +17,18 @@ let transitions = [
     [
         {read = '.'; to_state = "scanright"; write = '.'; action = Right};
         {read = '1'; to_state = "scanright"; write = '1'; action = Right};
-        {read = '-'; to_state = "scanright"; write = '-'; action = Right};
-        {read = '='; to_state = "eraseone"; write = '.'; action = Left}
+        {read = '+'; to_state = "addone"; write = '1'; action = Right};
     ]);
-    ("eraseone",
+    ("addone",
     [
-        {read = '1'; to_state = "subone"; write = '='; action = Left};
-        {read = '-'; to_state = "HALT"; write = '.'; action = Left}
+        {read = '1'; to_state = "addone"; write = '1'; action = Right};
+        {read = '.'; to_state = "addone"; write = '.'; action = Right};
+        {read = '='; to_state = "eraselast"; write = '.'; action = Left};
     ]);
-    ("subone",
+    ("eraselast",
     [
-        {read = '1'; to_state = "subone"; write = '1'; action = Left};
-        {read = '-'; to_state = "skip"; write = '-'; action = Left}
+        {read = '1'; to_state = "HALT"; write = '.'; action = Right};
     ]);
-    ("skip",
-    [
-        {read = '.'; to_state = "skip"; write = '.'; action = Left};
-        {read = '1'; to_state = "scanright"; write = '.'; action = Right}
-    ])
 ]
 
 let ac_to_str ac = 
@@ -60,10 +55,11 @@ let print_intro =
     print_endline "-------------------------------------------------------------"
 
 let launch_tape =
-    let explode s =
-        let rec exp i l =
-            if i < 0 then l else exp (i - 1) (s.[i] :: l)
-        in exp (String.length s - 1) []
+    let str_to_tape str =
+        let init_lst = '.' :: [] in
+        let rec exp i lst =
+            if i < 0 then lst else exp (i - 1) (str.[i] :: lst)
+        in exp (String.length str - 1) init_lst
     in
     let get_tape letters pos transition read_letter =
         {
@@ -87,7 +83,7 @@ let launch_tape =
     in
     let print_tape tape =
         print_char '[';
-        List.iteri (fun i x -> if i = tape.pos then Printf.printf "<%c>" (x)
+        List.iteri (fun i x -> if i = tape.pos then Printf.printf "\x1b[32m%c\x1b[0m" (x)
             else print_char x) tape.letters;
         print_string "..................] ";
         print_transition tape
@@ -110,15 +106,21 @@ let launch_tape =
     let get_letters tape wr_letter =
         List.mapi (fun i x -> if i = tape.pos then wr_letter else x) tape.letters
     in
-    let init_tape = get_tape (explode Sys.argv.(1)) 0 initial (List.nth (explode Sys.argv.(1)) 0) in
+    let init_tape = get_tape (str_to_tape Sys.argv.(1)) 0 initial
+        (List.nth (str_to_tape Sys.argv.(1)) 0) in
     let rec write_tape tape =
         print_tape tape;
         let next_trs = get_next_transition tape in
-        if next_trs = (List.hd finals) then
-            exit 0;
         let letter_to_wr = get_letter_to_wr tape in
         let pos = get_pos tape in
         let tape_letters = get_letters tape letter_to_wr in
-        write_tape (get_tape tape_letters pos next_trs (List.nth tape_letters pos))
+        if next_trs = (List.hd finals) then (
+            (* Printf.printf "trs: %s, wr: %c, pos: %d\n" (next_trs) (letter_to_wr) (pos); *)
+            let final_tape = get_tape tape_letters pos next_trs (List.nth tape_letters pos) in
+            print_tape final_tape; print_char '\n';
+            exit 0
+        )
+        else
+            write_tape (get_tape tape_letters pos next_trs (List.nth tape_letters pos))
     in
     write_tape init_tape
