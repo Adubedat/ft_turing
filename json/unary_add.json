@@ -1,7 +1,7 @@
 "name" : "unary_sub",
-"alphabet": [ "1", ".", "-", "=" ],
+"alphabet": [ "1", ".", "+", "=" ],
 "blank" : ".",
-"states" : [ "scanright", "eraseone", "subone", "skip", "HALT" ],
+"states" : [ "scanright", "addone", "HALT" ],
 "initial" : "scanright",
 "finals" : [ "HALT" ],
 "transitions" : {
@@ -13,6 +13,9 @@
         "addone": [
                 { "read" : "1", "to_state": "addone", "write": "1", "action": "RIGHT"},
                 { "read" : ".", "to_state": "addone", "write": ".", "action": "RIGHT"},
-                { "read" : "=", "to_state": "HALT" , "write": ".", "action": "RIGHT"}
-        ]
+                { "read" : "=", "to_state": "eraselast" , "write": ".", "action": "LEFT"}
+        ],
+        "eraselast": [
+                { "read" : "1", "to_state": "HALT", "write": ".", "action": "RIGHT"}
+		]
 }

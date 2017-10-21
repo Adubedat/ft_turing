@@ -1,0 +1,38 @@
+"name" : "is_palindrome",
+"alphabet": [ "0", "1", ".", "=" ],
+"blank" : ".",
+"states" : [ "scanright", "lastzero", "iszero", "lastone", "isone", "scanleft", "HALT" ],
+"initial" : "scanright",
+"finals" : [ "HALT" ],
+"transitions" : {
+        "scanright": [
+                { "read" : "0", "to_state": "lastzero", "write": ".", "action": "RIGHT"},
+                { "read" : "1", "to_state": "lastone", "write": ".", "action": "RIGHT"},
+                { "read" : "=", "to_state": "HALT", "write": "y", "action": "RIGHT"}
+        ],
+        "lastzero": [
+                { "read" : "0", "to_state": "lastzero", "write": "0", "action": "RIGHT"},
+                { "read" : "1", "to_state": "lastzero", "write": "1", "action": "RIGHT"},
+                { "read" : "=", "to_state": "iszero", "write": ".", "action": "LEFT"}
+        ],
+        "iszero": [
+                { "read" : "0", "to_state": "scanleft", "write": "=", "action": "LEFT"},
+                { "read" : "1", "to_state": "HALT", "write": "n", "action": "RIGHT"},
+                { "read" : ".", "to_state": "HALT", "write": "y", "action": "RIGHT"}
+        ],
+        "lastone": [
+                { "read" : "0", "to_state": "lastone", "write": "0", "action": "RIGHT"},
+                { "read" : "1", "to_state": "lastone", "write": "1", "action": "RIGHT"},
+                { "read" : "=", "to_state": "isone", "write": ".", "action": "LEFT"}
+        ],
+        "isone": [
+                { "read" : "1", "to_state": "scanleft", "write": "=", "action": "LEFT"},
+                { "read" : "0", "to_state": "HALT", "write": "n", "action": "RIGHT"},
+                { "read" : ".", "to_state": "HALT", "write": "y", "action": "RIGHT"}
+        ],
+        "scanleft": [
+                { "read" : "1", "to_state": "scanleft", "write": "1", "action": "LEFT"},
+                { "read" : "0", "to_state": "scanleft", "write": "0", "action": "LEFT"},
+                { "read" : ".", "to_state": "scanright", "write": ".", "action": "RIGHT"}
+        ]
+}

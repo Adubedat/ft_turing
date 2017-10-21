@@ -6,28 +6,48 @@ type tape_data = {letters: letter list; pos: int; trs: state; lread: letter}
 
 (* Below is an example, normally field are filled by json parsing *)
 (* examples are in testr.ml *)
-let name = "unary_add"
-let alphabet = ['1'; '.'; '+'; '=']
+let name = "is_palindrome"
+let alphabet = ['0'; '1'; '.'; '=']
 let blank = '.'
-let states = ["scanright"; "addone"; "HALT"]
+let states = ["scanright"; "lastzero"; "iszero"; "lastone"; "isone"; "scanleft"; "HALT"]
 let initial = "scanright"
 let finals = ["HALT"]
 let transitions = [
     ("scanright",
     [
+        {read = '0'; to_state = "lastzero"; write = '.'; action = Right};
+        {read = '1'; to_state = "lastone"; write = '.'; action = Right};
+        {read = '='; to_state = "HALT"; write = 'y'; action = Right};
+    ]);
+    ("lastzero",
+    [
+        {read = '0'; to_state = "lastzero"; write = '0'; action = Right};
+        {read = '1'; to_state = "lastzero"; write = '1'; action = Right};
+        {read = '='; to_state = "iszero"; write = '.'; action = Left};
+    ]);
+    ("iszero",
+    [
+        {read = '0'; to_state = "scanleft"; write = '='; action = Left};
+        {read = '1'; to_state = "HALT"; write = 'n'; action = Right};
+        {read = '.'; to_state = "HALT"; write = 'y'; action = Right};
+    ]);
+    ("lastone",
+    [
+        {read = '0'; to_state = "lastone"; write = '0'; action = Right};
+        {read = '1'; to_state = "lastone"; write = '1'; action = Right};
+        {read = '='; to_state = "isone"; write = '.'; action = Left};
+    ]);
+    ("isone",
+    [
+        {read = '1'; to_state = "scanleft"; write = '='; action = Left};
+        {read = '0'; to_state = "HALT"; write = 'n'; action = Right};
+        {read = '.'; to_state = "HALT"; write = 'y'; action = Right};
+    ]);
+    ("scanleft",
+    [
+        {read = '1'; to_state = "scanleft"; write = '1'; action = Left};
+        {read = '0'; to_state = "scanleft"; write = '0'; action = Left};
         {read = '.'; to_state = "scanright"; write = '.'; action = Right};
-        {read = '1'; to_state = "scanright"; write = '1'; action = Right};
-        {read = '+'; to_state = "addone"; write = '1'; action = Right};
-    ]);
-    ("addone",
-    [
-        {read = '1'; to_state = "addone"; write = '1'; action = Right};
-        {read = '.'; to_state = "addone"; write = '.'; action = Right};
-        {read = '='; to_state = "eraselast"; write = '.'; action = Left};
-    ]);
-    ("eraselast",
-    [
-        {read = '1'; to_state = "HALT"; write = '.'; action = Right};
     ]);
 ]
 
