@@ -102,3 +102,43 @@ let transitions = [
         {read = '.'; to_state = "scanright"; write = '.'; action = Right};
     ]);
 ]
+
+(**************************************************************************)
+
+let name = "is_same_power"
+let alphabet = ['0'; '1'; '.'; '=']
+let blank = '.'
+let states = ["scanright"; "lastone"; "isone"; "scanleftzero"; "iszero"; "HALT"]
+let initial = "scanright"
+let finals = ["HALT"]
+let transitions = [
+    ("scanright",
+    [
+        {read = '0'; to_state = "lastone"; write = '.'; action = Right};
+    ]);
+    ("lastone",
+    [
+        {read = '0'; to_state = "lastone"; write = '0'; action = Right};
+        {read = '1'; to_state = "lastone"; write = '1'; action = Right};
+        {read = '='; to_state = "isone"; write = '.'; action = Left};
+    ]);
+    ("isone",
+    [
+        {read = '0'; to_state = "HALT"; write = 'n'; action = Right};
+        {read = '.'; to_state = "HALT"; write = 'n'; action = Right};
+        {read = '1'; to_state = "scanleftzero"; write = '='; action = Left};
+    ]);
+    ("scanleftzero",
+    [
+        {read = '1'; to_state = "scanleftzero"; write = '1'; action = Left};
+        {read = '0'; to_state = "scanleftzero"; write = '0'; action = Left};
+        {read = '.'; to_state = "iszero"; write = '.'; action = Right};
+        {read = '='; to_state = "HALT"; write = 'y'; action = Right};
+    ]);
+    ("iszero",
+    [
+        {read = '0'; to_state = "lastone"; write = '.'; action = Right};
+        {read = '1'; to_state = "HALT"; write = 'n'; action = Right};
+        {read = '='; to_state = "HALT"; write = 'y'; action = Right};
+    ]);
+]
