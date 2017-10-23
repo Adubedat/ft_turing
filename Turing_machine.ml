@@ -3,8 +3,6 @@ type state = string
 type direction = Right | Left
 type tape_data = {letters: letter list; pos: int; trs: state; lread: letter}
 
-(* Below is an example, normally field are filled by json parsing *)
-(* examples are in testr.ml *)
 let name = Parsing.name 
 let alphabet = Parsing.alphabet
 let blank = Parsing.blank
@@ -52,6 +50,9 @@ let launch_tape =
             lread = read_letter
         }
     in
+        (* try *)
+        (* with *)
+
     let print_transition tape =
         let parse_trs trs_lst =
             List.iter (fun x -> match x with
@@ -63,7 +64,7 @@ let launch_tape =
                 | {Parsing.read=rd; Parsing.to_state=st; Parsing.write=wr; Parsing.action=ac} -> ()
                 ) trs_lst
         in
-        List.iter (fun x -> if (fst x) = tape.trs then parse_trs (snd x)) transitions
+        List.iter (fun x -> if (fst x) = tape.trs then parse_trs (snd x)) transitions;
     in
     let print_tape tape =
         print_char '[';
@@ -73,9 +74,16 @@ let launch_tape =
         print_transition tape
     in
     let get_next_transition tape =
-        let trs_lst = List.find (fun x -> (fst x) = tape.trs) transitions in
-        let trs = List.find (fun x -> x.Parsing.read = tape.lread) (snd trs_lst) in
-        trs.Parsing.to_state
+        try
+            let trs_lst = List.find (fun x -> (fst x) = tape.trs) transitions in
+            let trs = List.find (fun x -> x.Parsing.read = tape.lread) (snd trs_lst) in
+            trs.Parsing.to_state
+        with
+            _ -> (
+                Printf.printf "\n\x1b[31mError: read %c in transition %s not found\x1b[0m\n"
+                    (tape.lread) (tape.trs);
+                exit 1
+            )
     in
     let get_letter_to_wr tape =
         let trs_lst = List.find (fun x -> (fst x) = tape.trs) transitions in
@@ -104,7 +112,8 @@ let launch_tape =
             print_tape final_tape; print_char '\n';
             exit 0
         )
-        else
-            write_tape (get_tape tape_letters pos next_trs (List.nth tape_letters pos))
+        else (
+            write_tape (get_tape tape_letters pos next_trs (List.nth tape_letters pos));
+        )
     in
     write_tape init_tape

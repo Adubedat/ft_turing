@@ -1,8 +1,8 @@
 {
-	"name" : "unary_sub",
+	"name" : "unary_add",
 	"alphabet": [ "1", ".", "+", "=" ],
 	"blank" : ".",
-	"states" : [ "scanright", "addone", "HALT" ],
+	"states" : [ "scanright", "addone", "eraselast", "HALT" ],
 	"initial" : "scanright",
 	"finals" : [ "HALT" ],
 	"transitions" : {
