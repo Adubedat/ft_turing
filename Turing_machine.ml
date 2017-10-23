@@ -50,9 +50,6 @@ let launch_tape =
             lread = read_letter
         }
     in
-        (* try *)
-        (* with *)
-
     let print_transition tape =
         let parse_trs trs_lst =
             List.iter (fun x -> match x with
@@ -79,7 +76,7 @@ let launch_tape =
             let trs = List.find (fun x -> x.Parsing.read = tape.lread) (snd trs_lst) in
             trs.Parsing.to_state
         with
-            _ -> (
+            Not_found -> (
                 Printf.printf "\n\x1b[31mError: read %c in transition %s not found\x1b[0m\n"
                     (tape.lread) (tape.trs);
                 exit 1
@@ -93,7 +90,7 @@ let launch_tape =
     let get_pos tape =
         let trs_lst = List.find (fun x -> (fst x) = tape.trs) transitions in
         let trs = List.find (fun x -> x.Parsing.read = tape.lread) (snd trs_lst) in
-        if trs.Parsing.action =Parsing.Right then tape.pos + 1 else tape.pos - 1
+        if trs.Parsing.action = Parsing.Right then tape.pos + 1 else tape.pos - 1
     in
     let get_letters tape wr_letter =
         List.mapi (fun i x -> if i = tape.pos then wr_letter else x) tape.letters
@@ -106,14 +103,13 @@ let launch_tape =
         let letter_to_wr = get_letter_to_wr tape in
         let pos = get_pos tape in
         let tape_letters = get_letters tape letter_to_wr in
-        if next_trs = (List.hd finals) then (
+        if List.exists (fun x -> x = next_trs) finals then (
             (* Printf.printf "trs: %s, wr: %c, pos: %d\n" (next_trs) (letter_to_wr) (pos); *)
             let final_tape = get_tape tape_letters pos next_trs (List.nth tape_letters pos) in
             print_tape final_tape; print_char '\n';
             exit 0
         )
-        else (
+        else
             write_tape (get_tape tape_letters pos next_trs (List.nth tape_letters pos));
-        )
     in
     write_tape init_tape
