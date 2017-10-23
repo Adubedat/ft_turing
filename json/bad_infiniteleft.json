@@ -1,0 +1,14 @@
+{
+	"name" : "infinite_left",
+	"alphabet": [ "1", ".", "+", "=" ],
+	"blank" : ".",
+	"states" : [ "scanleft", "addone", "eraselast", "HALT" ],
+	"initial" : "scanleft",
+	"finals" : [ "HALT" ],
+	"transitions" : {
+			"scanleft": [
+					{ "read" : ".", "to_state": "scanleft", "write": ".", "action": "LEFT"},
+					{ "read" : "1", "to_state": "scanleft", "write": "1", "action": "LEFT"}
+			]
+	}
+}

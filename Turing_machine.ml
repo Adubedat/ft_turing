@@ -36,11 +36,10 @@ let print_intro =
     print_endline "-------------------------------------------------------------"
 
 let launch_tape =
-    let str_to_tape str =
-        let init_lst = '.' :: [] in
+    let str_to_charlst str =
         let rec exp i lst =
             if i < 0 then lst else exp (i - 1) (str.[i] :: lst)
-        in exp (String.length str - 1) init_lst
+        in exp (String.length str - 1) []
     in
     let get_tape letters pos transition read_letter =
         {
@@ -95,8 +94,8 @@ let launch_tape =
     let get_letters tape wr_letter =
         List.mapi (fun i x -> if i = tape.pos then wr_letter else x) tape.letters
     in
-    let init_tape = get_tape (str_to_tape Sys.argv.(2)) 0 initial
-        (List.nth (str_to_tape Sys.argv.(2)) 0) in
+    let init_tape = get_tape (str_to_charlst Sys.argv.(2)) 0 initial
+        (List.nth (str_to_charlst Sys.argv.(2)) 0) in
     let rec write_tape tape =
         print_tape tape;
         let next_trs = get_next_transition tape in
@@ -109,7 +108,17 @@ let launch_tape =
             print_tape final_tape; print_char '\n';
             exit 0
         )
-        else
-            write_tape (get_tape tape_letters pos next_trs (List.nth tape_letters pos));
+        else (
+            if pos = -1 then (
+                let tape_letters = '.' :: tape_letters in
+                write_tape (get_tape tape_letters 0 next_trs (List.nth tape_letters 0))
+            )
+            else if pos = (List.length tape_letters) then (
+                let tape_letters = tape_letters @ ['.'] in
+                write_tape (get_tape tape_letters pos next_trs (List.nth tape_letters pos))
+            )
+            else
+                write_tape (get_tape tape_letters pos next_trs (List.nth tape_letters pos))
+        )
     in
     write_tape init_tape
