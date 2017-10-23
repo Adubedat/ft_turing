@@ -6,7 +6,7 @@
 (*   By: adubedat <marvin@42.fr>                    +#+  +:+       +#+        *)
 (*                                                +#+#+#+#+#+   +#+           *)
 (*   Created: 2017/10/19 15:07:35 by adubedat          #+#    #+#             *)
-(*   Updated: 2017/10/23 14:09:52 by rporcon          ###   ########.fr       *)
+(*   Updated: 2017/10/23 15:12:59 by adubedat         ###   ########.fr       *)
 (*                                                                            *)
 (* ************************************************************************** *)
 
@@ -16,23 +16,24 @@ type direction = Right | Left
 type transition = {read: letter; to_state: state; write: letter; action: direction}
 
 let file_name =
-    (* try *)
+     try 
         Sys.argv.(1)
-    (* with *)
-    (*     | exn -> "" *)
+     with 
+         | exn -> print_endline "Error: argv1 must be a valid json file."; exit 0
 
 let json_file =
-    (* try *)
+    try
         Yojson.Basic.from_file file_name
-    (* with *)
-    (*     | exn -> `Null *)
+    with
+        | Yojson.Json_error err-> print_endline "Error: Json file not well formatted."; exit 0
+        | exn -> print_endline "Error: argv1 msut be be a valid json file."; exit 0
 
 let name =
-    (* try *)
+    try
         let open Yojson.Basic.Util in
         json_file |> member "name" |> to_string
-    (* with *)
-    (*     | exn -> "" *)
+    with
+        | exn -> print_endline "Error: Can not read name field."; exit 0
 
 let alphabet = 
     try
@@ -46,14 +47,14 @@ let alphabet =
                         let str = to_string head in
                         match String.length str with
                             | 1 -> loop tail (acc @ [str.[0]])
-                            | _ -> []
+                            | _ -> print_endline "Error: alphabet elements must be char."; exit 0
                     end
                 | [] -> acc
         in
         loop lst []
     end
     with
-        | exn -> []
+        | exn -> print_endline "Error: alphabet not well formatted."; exit 0
 
 let blank =
     try 
@@ -61,11 +62,12 @@ let blank =
         let open Yojson.Basic.Util in
         let c = json_file |> member "blank" |> to_string in
         match String.length c with
-            | 1 -> c.[0]
-            | _ -> '\x00'
+            | 1 -> if List.mem c.[0] alphabet then c.[0] else
+                (print_endline "Error: blank must be in alphabet list."; exit 0)
+            | _ -> print_endline "Error: blank must be a char."; exit 0
     end
     with
-        | exn -> '\x00'
+        | exn -> print_endline "Error: blank not well formatted."; exit 0
 
 let states =
     try
@@ -80,17 +82,18 @@ let states =
         loop lst []
     end
     with
-        | exn -> []
+        | exn -> print_endline "Error: states not well formatted."; exit 0
 
 let initial =
     try
     begin
         let open Yojson.Basic.Util in
         let str = json_file |> member "initial" |> to_string in
-        if List.mem str states then str else ""
+        if List.mem str states then str else 
+            (print_endline "Error: initial must be in states list."; exit 0)
     end
     with
-        | exn -> ""
+        | exn -> print_endline "Error: initial not well formatted."; exit 0
 
 let finals =
     try
@@ -105,7 +108,8 @@ let finals =
         let lst_str = loop final_lst [] in
         let rec loop lst =
             match lst with
-                | head :: tail when List.mem head states = false -> []
+                | head :: tail when List.mem head states = false -> 
+                        (print_endline "Error: finals must be a sublist of states."; exit 0)
                 | head :: tail -> loop tail
                 | [] -> lst_str
         in
@@ -116,15 +120,14 @@ let finals =
 
 let new_transition (obj: Yojson.Basic.json) =
     let open Yojson.Basic.Util in
-    let empty_record = {read = '\x00'; to_state = ""; write = '\x00'; action = Left} in
     let read = obj |> member "read" |> to_string in
     let to_state = obj |> member "to_state" |> to_string in
     let write = obj |> member "write" |> to_string in
     let action = obj |> member "action" |> to_string in
-    if String.length read = 1 && List.mem read.[0] alphabet = false then (print_endline "read element not in alphabet list"; empty_record)
-    else if List.mem to_state states = false then (print_endline "to_state element not in states list"; empty_record)
-    else if String.length write = 1 && List.mem write.[0] alphabet = false then (print_endline "write element not in alphabet list"; empty_record)
-    else if action <> "RIGHT" && action <> "LEFT" then (print_endline "action element not well formatted"; empty_record)
+    if String.length read = 1 && List.mem read.[0] alphabet = false then (print_endline "Error: read element must be in alphabet list"; exit 0)
+    else if List.mem to_state states = false then (print_endline "Error: to_state element must be in states list"; exit 0)
+    else if String.length write = 1 && List.mem write.[0] alphabet = false then (print_endline "Error: write element must be in alphabet list"; exit 0)
+    else if action <> "RIGHT" && action <> "LEFT" then (print_endline "Error: action element not well formatted"; exit 0)
     else begin
         let act = if action = "RIGHT" then Right else Left in
         {read = read.[0]; to_state = to_state; write = write.[0]; action = act}
@@ -153,4 +156,4 @@ let transitions =
         loop lst []
     end
     with
-        | exn -> []
+        | exn -> print_endline "Error: transitions not well formatted."; exit 0
