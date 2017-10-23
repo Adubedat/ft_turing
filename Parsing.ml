@@ -6,7 +6,7 @@
 (*   By: adubedat <marvin@42.fr>                    +#+  +:+       +#+        *)
 (*                                                +#+#+#+#+#+   +#+           *)
 (*   Created: 2017/10/19 15:07:35 by adubedat          #+#    #+#             *)
-(*   Updated: 2017/10/20 18:23:34 by adubedat         ###   ########.fr       *)
+(*   Updated: 2017/10/23 14:09:52 by rporcon          ###   ########.fr       *)
 (*                                                                            *)
 (* ************************************************************************** *)
 
@@ -16,23 +16,23 @@ type direction = Right | Left
 type transition = {read: letter; to_state: state; write: letter; action: direction}
 
 let file_name =
-    try
+    (* try *)
         Sys.argv.(1)
-    with
-        | exn -> ""
+    (* with *)
+    (*     | exn -> "" *)
 
 let json_file =
-    try
+    (* try *)
         Yojson.Basic.from_file file_name
-    with
-        | exn -> `Null
+    (* with *)
+    (*     | exn -> `Null *)
 
 let name =
-    try
+    (* try *)
         let open Yojson.Basic.Util in
         json_file |> member "name" |> to_string
-    with
-        | exn -> ""
+    (* with *)
+    (*     | exn -> "" *)
 
 let alphabet = 
     try
