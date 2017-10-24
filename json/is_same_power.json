@@ -2,7 +2,7 @@
 	"name" : "is_same_power",
 	"alphabet": [ "0", "1", ".", "=", "y", "n" ],
 	"blank" : ".",
-	"states" : [ "scanright", "lastone", "isone", "scanleftzero", "iszero", "HALT" ],
+	"states" : [ "scanright", "lastone", "isone", "scanleftzero", "iszero", "wr_n_right", "HALT" ],
 	"initial" : "scanright",
 	"finals" : [ "HALT" ],
 	"transitions" : {
@@ -27,8 +27,14 @@
 			],
 			"iszero": [
 					{ "read" : "0", "to_state": "lastone", "write": ".", "action": "RIGHT"},
-					{ "read" : "1", "to_state": "HALT", "write": "n", "action": "RIGHT"},
+					{ "read" : "1", "to_state": "wr_n_right", "write": ".", "action": "RIGHT"},
 					{ "read" : "=", "to_state": "HALT", "write": "y", "action": "RIGHT"}
+			],
+			"wr_n_right": [
+					{ "read" : "0", "to_state": "wr_n_right", "write": "0", "action": "RIGHT"},
+					{ "read" : "1", "to_state": "wr_n_right", "write": "1", "action": "RIGHT"},
+					{ "read" : "=", "to_state": "HALT", "write": "n", "action": "RIGHT"}
 			]
+
 	}
 }
