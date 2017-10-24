@@ -1,6 +1,6 @@
 {
 	"name" : "is_pair",
-	"alphabet": [ "0", ".", "y", "n" ],
+	"alphabet": [ "0", ".", "=", "y", "n" ],
 	"blank" : ".",
 	"states" : [ "scanright", "lastzero", "iszero", "firstzero", "HALT" ],
 	"initial" : "scanright",
@@ -8,14 +8,14 @@
 	"transitions" : {
 			"scanright": [
 					{ "read" : "0", "to_state": "lastzero", "write": ".", "action": "RIGHT"},
-					{ "read" : ".", "to_state": "HALT", "write": "y", "action": "RIGHT"}
+					{ "read" : "=", "to_state": "HALT", "write": "y", "action": "RIGHT"}
 			],
 			"lastzero": [
 					{ "read" : "0", "to_state": "lastzero", "write": "0", "action": "RIGHT"},
-					{ "read" : ".", "to_state": "iszero", "write": ".", "action": "LEFT"}
+					{ "read" : "=", "to_state": "iszero", "write": ".", "action": "LEFT"}
 			],
 			"iszero": [
-					{ "read" : "0", "to_state": "firstzero", "write": ".", "action": "LEFT"},
+					{ "read" : "0", "to_state": "firstzero", "write": "=", "action": "LEFT"},
 					{ "read" : ".", "to_state": "HALT", "write": "n", "action": "RIGHT"}
 			],
 			"firstzero": [
