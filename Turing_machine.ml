@@ -104,9 +104,21 @@ let launch_tape =
         let tape_letters = get_letters tape letter_to_wr in
         if List.exists (fun x -> x = next_trs) finals then (
             (* Printf.printf "trs: %s, wr: %c, pos: %d\n" (next_trs) (letter_to_wr) (pos); *)
-            let final_tape = get_tape tape_letters pos next_trs (List.nth tape_letters pos) in
-            print_tape final_tape; print_char '\n';
-            exit 0
+            if List.length tape_letters = pos then (
+                let tape_letters = tape_letters @ ['.'] in
+                let final_tape = get_tape tape_letters pos next_trs (List.nth tape_letters pos) in
+                print_tape final_tape
+            )
+            else if List.length tape_letters = 1 && pos = -1 then (
+                let tape_letters = '.' :: tape_letters in
+                let final_tape = get_tape tape_letters 0 next_trs (List.nth tape_letters 0) in
+                print_tape final_tape
+            )
+            else (
+                let final_tape = get_tape tape_letters pos next_trs (List.nth tape_letters pos) in
+                print_tape final_tape
+            );
+            print_char '\n'; exit 0
         )
         else (
             if pos = -1 then (
