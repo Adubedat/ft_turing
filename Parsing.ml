@@ -6,7 +6,7 @@
 (*   By: adubedat <marvin@42.fr>                    +#+  +:+       +#+        *)
 (*                                                +#+#+#+#+#+   +#+           *)
 (*   Created: 2017/10/19 15:07:35 by adubedat          #+#    #+#             *)
-(*   Updated: 2017/10/23 15:12:59 by adubedat         ###   ########.fr       *)
+(*   Updated: 2017/10/24 16:02:32 by adubedat         ###   ########.fr       *)
 (*                                                                            *)
 (* ************************************************************************** *)
 
@@ -157,3 +157,21 @@ let transitions =
     end
     with
         | exn -> print_endline "Error: transitions not well formatted."; exit 0
+
+let input =
+    try
+    begin
+        let input = Sys.argv.(2) in
+        let str_to_charlst str =
+            let rec exp i lst =
+                if i < 0 then lst else exp (i - 1) (str.[i] :: lst)
+            in exp (String.length str - 1) []
+        in
+        let input_lst = str_to_charlst input in
+        if (not (List.for_all (fun x -> List.mem x alphabet) input_lst)) then
+            (print_endline "Error: Input invalid, all characters must be in alphabet list."; exit 0)
+        else input
+    end
+    with
+        | exn -> print_endline "Error: Invalid input field."; exit 0
+
