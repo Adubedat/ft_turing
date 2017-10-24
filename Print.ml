@@ -38,3 +38,14 @@ let rec intstr_tup tup =
     match tup with
     | fst, snd -> print_char '('; print_int fst; print_string ", ";
          print_string snd; print_char ')'
+
+let print_help () =
+    print_endline "usage: ft_turing [-h] jsonfile input
+
+positional arguments:
+    jsonfile            json description of the machine
+
+    input               input of the machine
+
+optional arguments:
+    -h, --help          show this help message and exit"

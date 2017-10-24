@@ -6,7 +6,7 @@
 (*   By: adubedat <marvin@42.fr>                    +#+  +:+       +#+        *)
 (*                                                +#+#+#+#+#+   +#+           *)
 (*   Created: 2017/10/19 15:07:35 by adubedat          #+#    #+#             *)
-(*   Updated: 2017/10/24 16:02:32 by adubedat         ###   ########.fr       *)
+(*   Updated: 2017/10/24 17:22:51 by adubedat         ###   ########.fr       *)
 (*                                                                            *)
 (* ************************************************************************** *)
 
@@ -17,7 +17,12 @@ type transition = {read: letter; to_state: state; write: letter; action: directi
 
 let file_name =
      try 
-        Sys.argv.(1)
+         let arg1 = Sys.argv.(1) in
+         if arg1 = "-h" || arg1 = "--help" then
+             (Print.print_help (); exit 0)
+         else if Array.length Sys.argv <> 3 then
+             (print_endline "Error: Two arguments expected. -h for details."; exit 0)
+         else arg1
      with 
          | exn -> print_endline "Error: argv1 must be a valid json file."; exit 0
 
@@ -26,7 +31,7 @@ let json_file =
         Yojson.Basic.from_file file_name
     with
         | Yojson.Json_error err-> print_endline "Error: Json file not well formatted."; exit 0
-        | exn -> print_endline "Error: argv1 msut be be a valid json file."; exit 0
+        | exn -> print_endline "Error: argv1 must be be a valid json file."; exit 0
 
 let name =
     try
@@ -173,5 +178,5 @@ let input =
         else input
     end
     with
-        | exn -> print_endline "Error: Invalid input field."; exit 0
+        | exn -> print_endline "Error: Invalid input field. -h for details"; exit 0
 
