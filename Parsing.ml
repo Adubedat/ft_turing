@@ -6,7 +6,7 @@
 (*   By: adubedat <marvin@42.fr>                    +#+  +:+       +#+        *)
 (*                                                +#+#+#+#+#+   +#+           *)
 (*   Created: 2017/10/19 15:07:35 by adubedat          #+#    #+#             *)
-(*   Updated: 2017/10/24 17:22:51 by adubedat         ###   ########.fr       *)
+(*   Updated: 2017/10/24 17:56:58 by adubedat         ###   ########.fr       *)
 (*                                                                            *)
 (* ************************************************************************** *)
 
@@ -173,8 +173,8 @@ let input =
             in exp (String.length str - 1) []
         in
         let input_lst = str_to_charlst input in
-        if (not (List.for_all (fun x -> List.mem x alphabet) input_lst)) then
-            (print_endline "Error: Input invalid, all characters must be in alphabet list."; exit 0)
+        if (not (List.for_all (fun x -> List.mem x alphabet && x <> blank) input_lst)) then
+            (print_endline "Error: Input invalid, all characters must be in alphabet list without blank char."; exit 0)
         else input
     end
     with
