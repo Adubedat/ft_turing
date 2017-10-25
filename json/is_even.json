@@ -1,5 +1,5 @@
 {
-	"name" : "is_pair",
+	"name" : "is_even",
 	"alphabet": [ "0", ".", "=", "y", "n" ],
 	"blank" : ".",
 	"states" : [ "scanright", "lastzero", "iszero", "firstzero", "HALT" ],
