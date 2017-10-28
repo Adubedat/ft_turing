@@ -1,0 +1,18 @@
+input example: "0|[transition]#0011="
+num) = char position in <M>
+<M>:
+	1) current state
+	2) | (transitions delim)
+	6 - 13 : in state 0 (q0) if read . (d.) then write . (w.) and move right (ar)
+	3) [ (transition begin delim)
+	4) q (state)
+	5) 0 (state 0) (for state 1 use 2 because 1 already in tm1 alphabet)
+	6) d (read)
+	7) b (read blank .)
+	8) w (write)
+	9) b (write blank .)
+	10) a (action)
+	11) r (action RIGHT)
+	12) ] (transition end delim)
+	13) #
+	14 - ?: <w>
