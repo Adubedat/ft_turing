@@ -1,6 +1,6 @@
 {
 	"name" : "universal_tm",
-	"alphabet": [ "0", "1", "2", "|", "[", "q" , "d", "s", "w", "a", "r", "l", "h", "_", "#", "+", "=", ">", "."],
+	"alphabet": [ "0", "1", "2", "|", "[", "q" , "d", "s", "w", "a", "r", "l", "h", "_", "#", "+", "=", ">", ".", "<"],
 	"blank" : ".",
 	"states" : ["scan_input", "read_input", "scanstate_1", "scanstate_+", "scanstate_=", "readstate_1",
 		"readstate_+", "readstate_=", "search_transition_01", "search_transition_11", "search_transition_21",
@@ -10,7 +10,7 @@
 		"getaction_s1w1", "getaction_s2w_", "getaction_shw_", "go_to_state_s0w1ar", "go_to_state_s1w1ar",
 		"go_to_state_s2w_al", "go_to_state_shw_ar", "change_state_s0w1ar", "change_state_s1w1ar", "change_state_s2w_al",
 		"change_state_shw_ar", "change_marker_w1ar", "change_marker_w_al", "change_marker_w_ar", "set_new_marker",
-		"HALT"],
+		"set_new_marker_left", "erase_right_char", "HALT"],
 	"initial" : "scan_input",
 	"finals" : [ "HALT" ],
 	"transitions" : {
@@ -390,9 +390,9 @@
 				{ "read" : "2", "to_state": "change_marker_w_al", "write": "2", "action": "RIGHT"}
 			],
 			"change_state_shw_ar": [
-				{ "read" : "0", "to_state": "change_marker_w_al", "write": "h", "action": "RIGHT"},
-				{ "read" : "1", "to_state": "change_marker_w_al", "write": "h", "action": "RIGHT"},
-				{ "read" : "2", "to_state": "change_marker_w_al", "write": "h", "action": "RIGHT"}
+				{ "read" : "0", "to_state": "change_marker_w_ar", "write": "h", "action": "RIGHT"},
+				{ "read" : "1", "to_state": "change_marker_w_ar", "write": "h", "action": "RIGHT"},
+				{ "read" : "2", "to_state": "change_marker_w_ar", "write": "h", "action": "RIGHT"}
 			],
 			"change_marker_w1ar": [
 				{ "read" : "0", "to_state": "change_marker_w1ar", "write": "0", "action": "RIGHT"},
@@ -434,7 +434,13 @@
 				{ "read" : "=", "to_state": "change_marker_w_al", "write": "=", "action": "RIGHT"},
 				{ "read" : ".", "to_state": "change_marker_w_al", "write": ".", "action": "RIGHT"},
 				{ "read" : "h", "to_state": "change_marker_w_al", "write": "h", "action": "RIGHT"},
-				{ "read" : ">", "to_state": "set_new_marker", "write": "_", "action": "LEFT"}
+				{ "read" : ">", "to_state": "erase_right_char", "write": "<", "action": "RIGHT"}
+			],
+			"erase_right_char": [
+				{ "read" : "1", "to_state": "erase_right_char", "write": "_", "action": "LEFT"},
+				{ "read" : "=", "to_state": "erase_right_char", "write": "_", "action": "LEFT"},
+				{ "read" : "+", "to_state": "erase_right_char", "write": "_", "action": "LEFT"},
+				{ "read" : "<", "to_state": "read_input", "write": "<", "action": "LEFT"}
 			],
 			"change_marker_w_ar": [
 				{ "read" : "0", "to_state": "change_marker_w_ar", "write": "0", "action": "RIGHT"},
@@ -455,7 +461,13 @@
 				{ "read" : "=", "to_state": "change_marker_w_ar", "write": "=", "action": "RIGHT"},
 				{ "read" : ".", "to_state": "change_marker_w_ar", "write": ".", "action": "RIGHT"},
 				{ "read" : "h", "to_state": "change_marker_w_ar", "write": "h", "action": "RIGHT"},
+				{ "read" : "<", "to_state": "set_new_marker_left", "write": "_", "action": "LEFT"},
 				{ "read" : ">", "to_state": "set_new_marker", "write": "_", "action": "RIGHT"}
+			],
+			"set_new_marker_left": [
+				{ "read" : "1", "to_state": "read_input", "write": "<", "action": "LEFT"},
+				{ "read" : "+", "to_state": "read_input", "write": "<", "action": "LEFT"},
+				{ "read" : "=", "to_state": "read_input", "write": "<", "action": "LEFT"}
 			],
 			"set_new_marker": [
 				{ "read" : "1", "to_state": "read_input", "write": ">", "action": "RIGHT"},
