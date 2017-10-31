@@ -40,7 +40,7 @@ let rec intstr_tup tup =
          print_string snd; print_char ')'
 
 let print_help () =
-    print_endline "usage: ft_turing [-h] jsonfile input
+    print_endline "usage: ft_turing [-h][-O] jsonfile input
 
 positional arguments:
     jsonfile            json description of the machine
@@ -48,4 +48,5 @@ positional arguments:
     input               input of the machine
 
 optional arguments:
-    -h, --help          show this help message and exit"
+    -h, --help          show this help message and exit
+    -O                  print time complexity"

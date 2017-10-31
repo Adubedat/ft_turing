@@ -6,7 +6,7 @@
 (*   By: adubedat <marvin@42.fr>                    +#+  +:+       +#+        *)
 (*                                                +#+#+#+#+#+   +#+           *)
 (*   Created: 2017/10/19 15:07:35 by adubedat          #+#    #+#             *)
-(*   Updated: 2017/10/24 18:19:57 by adubedat         ###   ########.fr       *)
+(*   Updated: 2017/10/31 14:38:56 by rporcon          ###   ########.fr       *)
 (*                                                                            *)
 (* ************************************************************************** *)
 
@@ -20,8 +20,10 @@ let file_name =
          let arg1 = Sys.argv.(1) in
          if arg1 = "-h" || arg1 = "--help" then
              (Print.print_help (); exit 0)
-         else if Array.length Sys.argv <> 3 then
-             (print_endline "Error: Two arguments expected. -h for details."; exit 0)
+         else if ((arg1 <> "-O" && Array.length Sys.argv <> 3) || (arg1 = "-O" && Array.length Sys.argv <> 4)) then
+             (print_endline "Error: Wrong arguments. -h for details."; exit 0)
+         else if arg1 = "-O" then
+             Sys.argv.(2)
          else arg1
      with 
          | exn -> print_endline "Error: argv1 must be a valid json file."; exit 0
@@ -166,7 +168,9 @@ let transitions =
 let input =
     try
     begin
-        let input = Sys.argv.(2) in
+        let input = if Sys.argv.(1) = "-O" then Sys.argv.(3)
+                    else Sys.argv.(2)
+        in
         let str_to_charlst str =
             let rec exp i lst =
                 if i < 0 then lst else exp (i - 1) (str.[i] :: lst)

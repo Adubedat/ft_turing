@@ -35,6 +35,42 @@ let print_intro =
     print_transitions ();
     print_endline "-------------------------------------------------------------"
 
+let fact_num n =
+    let open Num in
+    let one = num_of_int 1 in
+    let rec fact_loop nb acc =
+        if nb = one then acc
+        else
+            fact_loop (nb -/ one) (acc */ nb)
+    in fact_loop n one
+
+let print_time_complexity trs_count =
+    let open Num in
+    let one = num_of_int 1 in
+    let zero = num_of_int 0 in
+    let two = num_of_int 2 in
+    let n = num_of_int (String.length Parsing.input) in
+    let rec get_degree acc nb =
+        if acc </ one then nb -/ one
+        else get_degree (acc // n) (nb +/ one)
+    in
+    if trs_count = one then
+        Printf.printf "\nTime complexity for n = %s and N = %s : O(1)\n" (string_of_num n) (string_of_num trs_count)
+    else if trs_count >/ (fact_num n) then
+        Printf.printf "\nTime complexity for n = %s and N = %s : O(n!)\n" (string_of_num n) (string_of_num trs_count)
+    else if trs_count >/ (two **/ n) then
+        Printf.printf "\nTime complexity for n = %s and N = %s : O(2^n)\n" (string_of_num n) (string_of_num trs_count)
+    else if (get_degree trs_count zero >/ zero) then (
+        let degree = get_degree trs_count zero in
+        if degree <=/ one then
+            Printf.printf "\nTime complexity for n = %s and N = %s : O(n)\n" (string_of_num n) (string_of_num trs_count)
+        else
+            Printf.printf "\nTime complexity for n = %s and N = %s : O(n^%s)\n" (string_of_num n) (string_of_num trs_count) (string_of_num degree)
+    )
+    else (
+        Printf.printf "\nTime complexity for n = %s and N = %s : O(logn)\n" (string_of_num n) (string_of_num trs_count)
+    )
+
 let launch_tape =
     let str_to_charlst str =
         let rec exp i lst =
@@ -94,10 +130,12 @@ let launch_tape =
     let get_letters tape wr_letter =
         List.mapi (fun i x -> if i = tape.pos then wr_letter else x) tape.letters
     in
-    let init_tape = get_tape (str_to_charlst Sys.argv.(2)) 0 initial
-        (List.nth (str_to_charlst Sys.argv.(2)) 0) in
+    let init_tape = get_tape (str_to_charlst Parsing.input) 0 initial
+        (List.nth (str_to_charlst Parsing.input) 0) in
+    let trs_count = ref 0 in
     let rec write_tape tape =
         print_tape tape;
+        incr trs_count;
         let next_trs = get_next_transition tape in
         let letter_to_wr = get_letter_to_wr tape in
         let pos = get_pos tape in
@@ -116,8 +154,10 @@ let launch_tape =
             )
             else (
                 let final_tape = get_tape tape_letters pos next_trs (List.nth tape_letters pos) in
-                print_tape final_tape
+                print_tape final_tape;
             );
+            if Sys.argv.(1) = "-O" then
+                print_time_complexity (Num.num_of_int !trs_count);
             print_char '\n'; exit 0
         )
         else (
