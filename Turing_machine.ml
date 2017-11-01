@@ -25,7 +25,7 @@ let print_transitions () =
     in
     List.iter (fun x -> parse_trs (fst x) (snd x)) transitions
 
-let print_intro =
+let print_intro () =
     Printf.printf "\t\t\t\t{--[  %s  ]--}\n" (name);
     print_string "Alphabet : [ "; Print.char_list (alphabet); print_endline " ]";
     Printf.printf "Blank : %c\n" (blank);
@@ -43,6 +43,12 @@ let fact_num n =
         else
             fact_loop (nb -/ one) (acc */ nb)
     in fact_loop n one
+
+let linear_regression () = ()
+    (* let coords = Array.make_float in *)
+    (* if Parsing.name = "unary_add" then *)
+    (*     let init_tape = get_tape (str_to_charlst "1+1=") 0 initial *)
+    (*         (List.nth (str_to_charlst "1+1=") 0) in *)
 
 let print_time_complexity trs_count =
     let open Num in
@@ -71,7 +77,7 @@ let print_time_complexity trs_count =
         Printf.printf "\nTime complexity for n = %s and N = %s : O(logn)\n" (string_of_num n) (string_of_num trs_count)
     )
 
-let launch_tape =
+let launch_tape () =
     let str_to_charlst str =
         let rec exp i lst =
             if i < 0 then lst else exp (i - 1) (str.[i] :: lst)

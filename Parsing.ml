@@ -20,11 +20,13 @@ let file_name =
          let arg1 = Sys.argv.(1) in
          if arg1 = "-h" || arg1 = "--help" then
              (Print.print_help (); exit 0)
-         else if ((arg1 <> "-O" && Array.length Sys.argv <> 3) || (arg1 = "-O" && Array.length Sys.argv <> 4)) then
-             (print_endline "Error: Wrong arguments. -h for details."; exit 0)
-         else if arg1 = "-O" then
+         else if (arg1 = "-O" && Array.length Sys.argv = 4 ||
+             arg1 = "-Olr" && Array.length Sys.argv = 3) then
              Sys.argv.(2)
-         else arg1
+         else if (Array.length Sys.argv = 3) then
+             arg1
+         else
+             (print_endline "Error: Wrong arguments. -h for details."; exit 0)
      with 
          | exn -> print_endline "Error: argv1 must be a valid json file."; exit 0
 
@@ -166,23 +168,26 @@ let transitions =
         | exn -> print_endline "Error: transitions not well formatted."; exit 0
 
 let input =
-    try
-    begin
-        let input = if Sys.argv.(1) = "-O" then Sys.argv.(3)
-                    else Sys.argv.(2)
-        in
-        let str_to_charlst str =
-            let rec exp i lst =
-                if i < 0 then lst else exp (i - 1) (str.[i] :: lst)
-            in exp (String.length str - 1) []
-        in
-        let input_lst = str_to_charlst input in
-        if (not (List.for_all (fun x -> List.mem x alphabet && x <> blank) input_lst)) then
-            (print_endline "Error: Input invalid, all characters must be in alphabet list without blank char."; exit 0)
-        else if (String.length input) = 0 then
-            (print_endline "Error: Empty input."; exit 0)
-        else input
-    end
-    with
-        | exn -> print_endline "Error: Invalid input field. -h for details"; exit 0
+    if Sys.argv.(1) = "-Olr" then ""
+    else (
+        try
+        begin
+            let input = if Sys.argv.(1) = "-O" then Sys.argv.(3)
+                        else Sys.argv.(2)
+            in
+            let str_to_charlst str =
+                let rec exp i lst =
+                    if i < 0 then lst else exp (i - 1) (str.[i] :: lst)
+                in exp (String.length str - 1) []
+            in
+            let input_lst = str_to_charlst input in
+            if (not (List.for_all (fun x -> List.mem x alphabet && x <> blank) input_lst)) then
+                (print_endline "Error: Input invalid, all characters must be in alphabet list without blank char."; exit 0)
+            else if (String.length input) = 0 then
+                (print_endline "Error: Empty input."; exit 0)
+            else input
+        end
+        with
+            | exn -> print_endline "Error: Invalid input field. -h for details"; exit 0
 
+    )
