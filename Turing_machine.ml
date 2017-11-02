@@ -202,9 +202,20 @@ let get_tape_trs tape_init =
     tape_move (tape_init)
 
 let linear_regression () =
-    let coords = Array.make_float 5 in
+    let x_array = Array.make 5 0 in
+    let fx_array = Array.make 5 0 in
     if Parsing.name = "unary_add" then
         let init_tape = get_tape (str_to_charlst "1+1=") 0 initial
             (List.nth (str_to_charlst "1+1=") 0) in
         let fx = get_tape_trs init_tape in
-        Printf.printf "%d" fx
+        x_array.(0) <- 4;
+        fx_array.(0) <- fx;
+
+        let init_tape = get_tape (str_to_charlst "111+111=") 0 initial
+            (List.nth (str_to_charlst "111+111=") 0) in
+        let fx = get_tape_trs init_tape in
+        x_array.(1) <- 8;
+        fx_array.(1) <- fx;
+        for i = 0 to 1 do
+            Printf.printf "x: %d, fx: %d\n" x_array.(i) fx_array.(i)
+        done
