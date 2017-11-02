@@ -27,6 +27,11 @@ let rec int_list lst =
     | [] -> print_char '\n'
     | head::tail -> print_int head; print_string ", "; int_list tail
 
+let rec float_list lst =
+    match lst with
+    | head::[] -> print_float head
+    | [] -> print_char '\n'
+    | head::tail -> print_float head; print_string ", "; float_list tail
 
 (* Tuple*)
 let rec intint_tup tup =
