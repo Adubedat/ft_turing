@@ -44,12 +44,6 @@ let fact_num n =
             fact_loop (nb -/ one) (acc */ nb)
     in fact_loop n one
 
-let linear_regression () = ()
-    (* let coords = Array.make_float in *)
-    (* if Parsing.name = "unary_add" then *)
-    (*     let init_tape = get_tape (str_to_charlst "1+1=") 0 initial *)
-    (*         (List.nth (str_to_charlst "1+1=") 0) in *)
-
 let print_time_complexity trs_count =
     let open Num in
     let one = num_of_int 1 in
@@ -77,67 +71,68 @@ let print_time_complexity trs_count =
         Printf.printf "\nTime complexity for n = %s and N = %s : O(logn)\n" (string_of_num n) (string_of_num trs_count)
     )
 
-let launch_tape () =
-    let str_to_charlst str =
-        let rec exp i lst =
-            if i < 0 then lst else exp (i - 1) (str.[i] :: lst)
-        in exp (String.length str - 1) []
-    in
-    let get_tape letters pos transition read_letter =
-        {
-            letters = letters;
-            pos = pos;
-            trs = transition;
-            lread = read_letter
-        }
-    in
-    let print_transition tape =
-        let parse_trs trs_lst =
-            List.iter (fun x -> match x with
-                | {Parsing.read=rd; Parsing.to_state=st; Parsing.write=wr; Parsing.action=ac}
-                    when rd = tape.lread -> (
-                        Printf.printf "(%s, %c) -> (%s, %c, %s)\n"
-                            (tape.trs) (rd) (st) (wr) (ac_to_str(ac))
-                )
-                | {Parsing.read=rd; Parsing.to_state=st; Parsing.write=wr; Parsing.action=ac} -> ()
-                ) trs_lst
-        in
-        List.iter (fun x -> if (fst x) = tape.trs then parse_trs (snd x)) transitions;
-    in
-    let print_tape tape =
-        print_char '[';
-        List.iteri (fun i x -> if i = tape.pos then Printf.printf "\x1b[32m%c\x1b[0m" (x)
-            else print_char x) tape.letters;
-        print_string "..................] ";
-        print_transition tape
-    in
-    let get_next_transition tape =
-        try
-            let trs_lst = List.find (fun x -> (fst x) = tape.trs) transitions in
-            let trs = List.find (fun x -> x.Parsing.read = tape.lread) (snd trs_lst) in
-            trs.Parsing.to_state
-        with
-            Not_found -> (
-                Printf.printf "\n\x1b[31mError: read %c in transition %s not found\x1b[0m\n"
-                    (tape.lread) (tape.trs);
-                exit 1
+let str_to_charlst str =
+    let rec exp i lst =
+        if i < 0 then lst else exp (i - 1) (str.[i] :: lst)
+    in exp (String.length str - 1) []
+
+let get_tape letters pos transition read_letter =
+    {
+        letters = letters;
+        pos = pos;
+        trs = transition;
+        lread = read_letter
+    }
+
+let print_transition tape =
+    let parse_trs trs_lst =
+        List.iter (fun x -> match x with
+            | {Parsing.read=rd; Parsing.to_state=st; Parsing.write=wr; Parsing.action=ac}
+                when rd = tape.lread -> (
+                    Printf.printf "(%s, %c) -> (%s, %c, %s)\n"
+                        (tape.trs) (rd) (st) (wr) (ac_to_str(ac))
             )
+            | {Parsing.read=rd; Parsing.to_state=st; Parsing.write=wr; Parsing.action=ac} -> ()
+            ) trs_lst
     in
-    let get_letter_to_wr tape =
+    List.iter (fun x -> if (fst x) = tape.trs then parse_trs (snd x)) transitions
+
+let print_tape tape =
+    print_char '[';
+    List.iteri (fun i x -> if i = tape.pos then Printf.printf "\x1b[32m%c\x1b[0m" (x)
+        else print_char x) tape.letters;
+    print_string "..................] ";
+    print_transition tape
+
+let get_next_transition tape =
+    try
         let trs_lst = List.find (fun x -> (fst x) = tape.trs) transitions in
         let trs = List.find (fun x -> x.Parsing.read = tape.lread) (snd trs_lst) in
-        trs.Parsing.write
-    in
-    let get_pos tape =
-        let trs_lst = List.find (fun x -> (fst x) = tape.trs) transitions in
-        let trs = List.find (fun x -> x.Parsing.read = tape.lread) (snd trs_lst) in
-        if trs.Parsing.action = Parsing.Right then tape.pos + 1 else tape.pos - 1
-    in
-    let get_letters tape wr_letter =
-        List.mapi (fun i x -> if i = tape.pos then wr_letter else x) tape.letters
-    in
-    let init_tape = get_tape (str_to_charlst Parsing.input) 0 initial
-        (List.nth (str_to_charlst Parsing.input) 0) in
+        trs.Parsing.to_state
+    with
+        Not_found -> (
+            Printf.printf "\n\x1b[31mError: read %c in transition %s not found\x1b[0m\n"
+                (tape.lread) (tape.trs);
+            exit 1
+        )
+
+let get_letter_to_wr tape =
+    let trs_lst = List.find (fun x -> (fst x) = tape.trs) transitions in
+    let trs = List.find (fun x -> x.Parsing.read = tape.lread) (snd trs_lst) in
+    trs.Parsing.write
+
+let get_pos tape =
+    let trs_lst = List.find (fun x -> (fst x) = tape.trs) transitions in
+    let trs = List.find (fun x -> x.Parsing.read = tape.lread) (snd trs_lst) in
+    if trs.Parsing.action = Parsing.Right then tape.pos + 1 else tape.pos - 1
+
+let get_letters tape wr_letter =
+    List.mapi (fun i x -> if i = tape.pos then wr_letter else x) tape.letters
+
+let init_tape () = get_tape (str_to_charlst Parsing.input) 0 initial
+    (List.nth (str_to_charlst Parsing.input) 0)
+
+let launch_tape () =
     let trs_count = ref 0 in
     let rec write_tape tape =
         print_tape tape;
@@ -179,4 +174,37 @@ let launch_tape () =
                 write_tape (get_tape tape_letters pos next_trs (List.nth tape_letters pos))
         )
     in
-    write_tape init_tape
+    write_tape (init_tape ())
+
+let get_tape_trs tape_init =
+    let trs_count = ref 0 in
+    let rec tape_move tape =
+        incr trs_count;
+        let next_trs = get_next_transition tape in
+        let letter_to_wr = get_letter_to_wr tape in
+        let pos = get_pos tape in
+        let tape_letters = get_letters tape letter_to_wr in
+        if List.exists (fun x -> x = next_trs) finals then
+             !trs_count
+        else (
+            if pos = -1 then (
+                let tape_letters = '.' :: tape_letters in
+                tape_move (get_tape tape_letters 0 next_trs (List.nth tape_letters 0))
+            )
+            else if pos = (List.length tape_letters) then (
+                let tape_letters = tape_letters @ ['.'] in
+                tape_move (get_tape tape_letters pos next_trs (List.nth tape_letters pos))
+            )
+            else
+                tape_move (get_tape tape_letters pos next_trs (List.nth tape_letters pos))
+        )
+    in
+    tape_move (tape_init)
+
+let linear_regression () =
+    let coords = Array.make_float 5 in
+    if Parsing.name = "unary_add" then
+        let init_tape = get_tape (str_to_charlst "1+1=") 0 initial
+            (List.nth (str_to_charlst "1+1=") 0) in
+        let fx = get_tape_trs init_tape in
+        Printf.printf "%d" fx
