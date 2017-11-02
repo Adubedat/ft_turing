@@ -8,8 +8,10 @@ let simple = get_module py "simple"
 let () =
     let x_array = [Pyfloat 0.; Pyfloat 2.] in
     let y_array = [Pyfloat 2.; Pyfloat 4.] in
-    let res = get_list simple "my_polyfit" [Pylist x_array; Pylist y_array; Pyint 2] in
-    print_float (List.nth res 0);
+    let res = get_list simple "my_polyfit" [Pylist x_array; Pylist y_array; Pyint 1] in
+    (* let my_ref = dereference res in *)
+    let my_lst = List.map (fun (Pyfloat x) -> x) res in
+    Print.float_list my_lst;
 
 	(* msg = simple.get_message() *)
 	(* let msg = get_string simple "get_message" [] in *)
