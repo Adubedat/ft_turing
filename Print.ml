@@ -31,7 +31,9 @@ let rec float_list lst =
     match lst with
     | head::[] -> print_float head
     | [] -> print_char '\n'
-    | head::tail -> print_float head; print_string ", "; float_list tail
+    | head::tail -> (
+        Printf.printf "%.5f, " head; float_list tail
+    )
 
 (* Tuple*)
 let rec intint_tup tup =
