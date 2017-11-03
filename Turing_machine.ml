@@ -210,165 +210,161 @@ let linear_regression () =
     let x_array = Array.make_float 5 in
     let fx_array = Array.make_float 5 in
     if Parsing.name = "unary_add" then (
-        let init_tape = get_tape (str_to_charlst "1+1=") 0 initial
-            (List.nth (str_to_charlst "1+1=") 0) in
+        let tm_input = "1+1=" in
+        let init_tape = get_tape (str_to_charlst tm_input) 0 initial (List.nth (str_to_charlst tm_input) 0) in
         let fx = get_tape_trs init_tape in
         x_array.(0) <- 4.;
         fx_array.(0) <- fx;
 
-        let init_tape = get_tape (str_to_charlst "111+111=") 0 initial
-            (List.nth (str_to_charlst "111+111=") 0) in
+        let tm_input = "111+111=" in
+        let init_tape = get_tape (str_to_charlst tm_input) 0 initial (List.nth (str_to_charlst tm_input) 0) in
         let fx = get_tape_trs init_tape in
         x_array.(1) <- 8.;
         fx_array.(1) <- fx;
 
-        let init_tape = get_tape (str_to_charlst "1111111+1111111=") 0 initial
-            (List.nth (str_to_charlst "1111111+1111111=") 0) in
+        let tm_input = "1111111+1111111=" in
+        let init_tape = get_tape (str_to_charlst tm_input) 0 initial
+            (List.nth (str_to_charlst tm_input) 0) in
         let fx = get_tape_trs init_tape in
         x_array.(2) <- 16.;
         fx_array.(2) <- fx;
 
-        let init_tape = get_tape (str_to_charlst "111111111111111+111111111111111=") 0 initial
-            (List.nth (str_to_charlst "111111111111111+111111111111111=") 0) in
+        let tm_input = "111111111111111+111111111111111=" in
+        let init_tape = get_tape (str_to_charlst tm_input) 0 initial (List.nth (str_to_charlst tm_input) 0) in
         let fx = get_tape_trs init_tape in
         x_array.(3) <- 32.;
         fx_array.(3) <- fx;
 
-        let init_tape = get_tape (str_to_charlst "1111111111111111111111111111111+1111111111111111111111111111111=")
-            0 initial (List.nth (str_to_charlst "1111111111111111111111111111111+1111111111111111111111111111111=")
-            0) in
+        let tm_input = "1111111111111111111111111111111+1111111111111111111111111111111=" in
+        let init_tape = get_tape (str_to_charlst tm_input) 0 initial (List.nth (str_to_charlst tm_input) 0) in
         let fx = get_tape_trs init_tape in
         x_array.(4) <- 64.;
         fx_array.(4) <- fx
     )
     else if Parsing.name = "is_palindrome" then (
-        let init_tape = get_tape (str_to_charlst "111=") 0 initial
-            (List.nth (str_to_charlst "111=") 0) in
+        let tm_input = "111=" in
+        let init_tape = get_tape (str_to_charlst tm_input) 0 initial (List.nth (str_to_charlst tm_input) 0) in
         let fx = get_tape_trs init_tape in
         x_array.(0) <- 4.;
         fx_array.(0) <- fx;
 
-        let init_tape = get_tape (str_to_charlst "1111111=") 0 initial
-            (List.nth (str_to_charlst "1111111=") 0) in
+        let tm_input = "1111111=" in
+        let init_tape = get_tape (str_to_charlst tm_input) 0 initial (List.nth (str_to_charlst tm_input) 0) in
         let fx = get_tape_trs init_tape in
         x_array.(1) <- 8.;
         fx_array.(1) <- fx;
 
-        let init_tape = get_tape (str_to_charlst "111111111111111=") 0 initial
-            (List.nth (str_to_charlst "111111111111111=") 0) in
+        let tm_input = "111111111111111=" in
+        let init_tape = get_tape (str_to_charlst tm_input) 0 initial (List.nth (str_to_charlst tm_input) 0) in
         let fx = get_tape_trs init_tape in
         x_array.(2) <- 16.;
         fx_array.(2) <- fx;
 
-        let init_tape = get_tape (str_to_charlst "1111111111111111111111111111111=") 0 initial
-            (List.nth (str_to_charlst "1111111111111111111111111111111=") 0) in
+        let tm_input = "1111111111111111111111111111111=" in
+        let init_tape = get_tape (str_to_charlst tm_input) 0 initial (List.nth (str_to_charlst tm_input) 0) in
         let fx = get_tape_trs init_tape in
         x_array.(3) <- 32.;
         fx_array.(3) <- fx;
 
-        let init_tape = get_tape (str_to_charlst "111111111111111111111111111111111111111111111111111111111111111=")
-            0 initial (List.nth (str_to_charlst "111111111111111111111111111111111111111111111111111111111111111=")
-            0) in
+        let tm_input = "111111111111111111111111111111111111111111111111111111111111111=" in
+        let init_tape = get_tape (str_to_charlst tm_input) 0 initial (List.nth (str_to_charlst tm_input) 0) in
         let fx = get_tape_trs init_tape in
         x_array.(4) <- 64.;
         fx_array.(4) <- fx
     )
     else if Parsing.name = "is_same_power" then (
-        let init_tape = get_tape (str_to_charlst "0011=") 0 initial
-            (List.nth (str_to_charlst "0011=") 0) in
+        let tm_input = "0011=" in
+        let init_tape = get_tape (str_to_charlst tm_input) 0 initial (List.nth (str_to_charlst tm_input) 0) in
         let fx = get_tape_trs init_tape in
         x_array.(0) <- 5.;
         fx_array.(0) <- fx;
 
-        let init_tape = get_tape (str_to_charlst "00001111=") 0 initial
-            (List.nth (str_to_charlst "00001111=") 0) in
+        let tm_input = "00001111=" in
+        let init_tape = get_tape (str_to_charlst tm_input) 0 initial (List.nth (str_to_charlst tm_input) 0) in
         let fx = get_tape_trs init_tape in
         x_array.(1) <- 9.;
         fx_array.(1) <- fx;
 
-        let init_tape = get_tape (str_to_charlst "000000000111111111=") 0 initial
-            (List.nth (str_to_charlst "000000000111111111=") 0) in
+        let tm_input = "000000000111111111=" in
+        let init_tape = get_tape (str_to_charlst tm_input) 0 initial (List.nth (str_to_charlst tm_input) 0) in
         let fx = get_tape_trs init_tape in
         x_array.(2) <- 19.;
         fx_array.(2) <- fx;
 
-        let init_tape = get_tape (str_to_charlst "00000000000000000001111111111111111111=") 0 initial
-            (List.nth (str_to_charlst "00000000000000000001111111111111111111=") 0) in
+        let tm_input = "00000000000000000001111111111111111111=" in
+        let init_tape = get_tape (str_to_charlst tm_input) 0 initial (List.nth (str_to_charlst tm_input) 0) in
         let fx = get_tape_trs init_tape in
         x_array.(3) <- 39.;
         fx_array.(3) <- fx;
 
-        let init_tape = get_tape (str_to_charlst "000000000000000000000000000000000000000111111111111111111111111111111111111111=")
-            0 initial (List.nth (str_to_charlst "000000000000000000000000000000000000000111111111111111111111111111111111111111=")
-            0) in
+        let tm_input = "000000000000000000000000000000000000000111111111111111111111111111111111111111=" in
+        let init_tape = get_tape (str_to_charlst tm_input) 0 initial (List.nth (str_to_charlst tm_input) 0) in
         let fx = get_tape_trs init_tape in
         x_array.(4) <- 79.;
         fx_array.(4) <- fx
     )
     else if Parsing.name = "is_even" then (
-        let init_tape = get_tape (str_to_charlst "0000=") 0 initial
-            (List.nth (str_to_charlst "0000=") 0) in
+        let tm_input = "0000=" in
+        let init_tape = get_tape (str_to_charlst tm_input) 0 initial (List.nth (str_to_charlst tm_input) 0) in
         let fx = get_tape_trs init_tape in
         x_array.(0) <- 5.;
         fx_array.(0) <- fx;
 
-        let init_tape = get_tape (str_to_charlst "00000000=") 0 initial
-            (List.nth (str_to_charlst "00000000=") 0) in
+        let tm_input = "00000000=" in
+        let init_tape = get_tape (str_to_charlst tm_input) 0 initial (List.nth (str_to_charlst tm_input) 0) in
         let fx = get_tape_trs init_tape in
         x_array.(1) <- 9.;
         fx_array.(1) <- fx;
 
-        let init_tape = get_tape (str_to_charlst "000000000000000000=") 0 initial
-            (List.nth (str_to_charlst "000000000000000000=") 0) in
+        let tm_input = "000000000000000000=" in
+        let init_tape = get_tape (str_to_charlst tm_input) 0 initial (List.nth (str_to_charlst tm_input) 0) in
         let fx = get_tape_trs init_tape in
         x_array.(2) <- 19.;
         fx_array.(2) <- fx;
 
-        let init_tape = get_tape (str_to_charlst "00000000000000000000000000000000000000=") 0 initial
-            (List.nth (str_to_charlst "00000000000000000000000000000000000000=") 0) in
+        let tm_input = "00000000000000000000000000000000000000=" in
+        let init_tape = get_tape (str_to_charlst tm_input) 0 initial (List.nth (str_to_charlst tm_input) 0) in
         let fx = get_tape_trs init_tape in
         x_array.(3) <- 39.;
         fx_array.(3) <- fx;
 
-        let init_tape = get_tape (str_to_charlst "000000000000000000000000000000000000000000000000000000000000000000000000000000=")
-            0 initial (List.nth (str_to_charlst "000000000000000000000000000000000000000000000000000000000000000000000000000000=")
-            0) in
+        let tm_input = "000000000000000000000000000000000000000000000000000000000000000000000000000000=" in
+        let init_tape = get_tape (str_to_charlst tm_input) 0 initial (List.nth (str_to_charlst tm_input) 0) in
         let fx = get_tape_trs init_tape in
         x_array.(4) <- 79.;
         fx_array.(4) <- fx
+    )
+    else if Parsing.name = "universal_tm" then (
+        let tm_input = "0|[q0d1s0w1ar[q0d+s1w1ar[q1d1s1w1ar[q1d=s2w_al[q2d1shw_ar#>1+1=" in
+        let init_tape = get_tape (str_to_charlst tm_input) 0 initial (List.nth (str_to_charlst tm_input) 0) in
+        let fx = get_tape_trs init_tape in
+        x_array.(0) <- 63.;
+        fx_array.(0) <- fx;
+
+        let tm_input = "0|[q0d1s0w1ar[q0d+s1w1ar[q1d1s1w1ar[q1d=s2w_al[q2d1shw_ar#>111+111=" in
+        let init_tape = get_tape (str_to_charlst tm_input) 0 initial (List.nth (str_to_charlst tm_input) 0) in
+        let fx = get_tape_trs init_tape in
+        x_array.(1) <- 67.;
+        fx_array.(1) <- fx;
+
+        let tm_input = "0|[q0d1s0w1ar[q0d+s1w1ar[q1d1s1w1ar[q1d=s2w_al[q2d1shw_ar#>1111111+1111111=" in
+        let init_tape = get_tape (str_to_charlst tm_input) 0 initial (List.nth (str_to_charlst tm_input) 0) in
+        let fx = get_tape_trs init_tape in
+        x_array.(2) <- 75.;
+        fx_array.(2) <- fx;
+
+        let tm_input = "0|[q0d1s0w1ar[q0d+s1w1ar[q1d1s1w1ar[q1d=s2w_al[q2d1shw_ar#>111111111111111+111111111111111=" in
+        let init_tape = get_tape (str_to_charlst tm_input) 0 initial (List.nth (str_to_charlst tm_input) 0) in
+        let fx = get_tape_trs init_tape in
+        x_array.(3) <- 91.;
+        fx_array.(3) <- fx;
+
+        let tm_input = "0|[q0d1s0w1ar[q0d+s1w1ar[q1d1s1w1ar[q1d=s2w_al[q2d1shw_ar#>1111111111111111111111111111111+1111111111111111111111111111111=" in
+        let init_tape = get_tape (str_to_charlst tm_input) 0 initial (List.nth (str_to_charlst tm_input) 0) in
+        let fx = get_tape_trs init_tape in
+        x_array.(4) <- 123.;
+        fx_array.(4) <- fx
     );
-    (* else if Parsing.name = "universal_tm" then ( *)
-    (*     let init_tape = get_tape (str_to_charlst "0000=") 0 initial *)
-    (*         (List.nth (str_to_charlst "0000=") 0) in *)
-    (*     let fx = get_tape_trs init_tape in *)
-    (*     x_array.(0) <- 5.; *)
-    (*     fx_array.(0) <- fx; *)
-
-    (*     let init_tape = get_tape (str_to_charlst "00000000=") 0 initial *)
-    (*         (List.nth (str_to_charlst "00000000=") 0) in *)
-    (*     let fx = get_tape_trs init_tape in *)
-    (*     x_array.(1) <- 9.; *)
-    (*     fx_array.(1) <- fx; *)
-
-    (*     let init_tape = get_tape (str_to_charlst "000000000000000000=") 0 initial *)
-    (*         (List.nth (str_to_charlst "000000000000000000=") 0) in *)
-    (*     let fx = get_tape_trs init_tape in *)
-    (*     x_array.(2) <- 19.; *)
-    (*     fx_array.(2) <- fx; *)
-
-    (*     let init_tape = get_tape (str_to_charlst "00000000000000000000000000000000000000=") 0 initial *)
-    (*         (List.nth (str_to_charlst "00000000000000000000000000000000000000=") 0) in *)
-    (*     let fx = get_tape_trs init_tape in *)
-    (*     x_array.(3) <- 39.; *)
-    (*     fx_array.(3) <- fx; *)
-
-    (*     let init_tape = get_tape (str_to_charlst "000000000000000000000000000000000000000000000000000000000000000000000000000000=") *)
-    (*         0 initial (List.nth (str_to_charlst "000000000000000000000000000000000000000000000000000000000000000000000000000000=") *)
-    (*         0) in *)
-    (*     let fx = get_tape_trs init_tape in *)
-    (*     x_array.(4) <- 79.; *)
-    (*     fx_array.(4) <- fx *)
-    (* ); *)
 
     for i = 0 to 4 do
         Printf.printf "x: %f, fx: %f\n" x_array.(i) fx_array.(i)
