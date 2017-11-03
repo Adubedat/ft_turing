@@ -11,7 +11,7 @@
 					{ "read" : "=", "to_state": "HALT", "write": "y", "action": "RIGHT"}
 			],
 			"scansecondzero": [
-					{ "read" : "0", "to_state": "scanzero", "write": "0", "action": "RIGHT"},
+					{ "read" : "0", "to_state": "scanzero", "write": ".", "action": "RIGHT"},
 					{ "read" : "=", "to_state": "HALT", "write": "n", "action": "RIGHT"}
 			]
 	}
