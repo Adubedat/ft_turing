@@ -201,10 +201,15 @@ let get_tape_trs tape_init =
     in
     tape_move (tape_init)
 
+open Lymp
+let interpreter = "/Users/rporcon/.brew/bin/python3"
+let py = init "."
+let polyfit = get_module py "polyfit"
+
 let linear_regression () =
     let x_array = Array.make_float 5 in
     let fx_array = Array.make_float 5 in
-    if Parsing.name = "unary_add" then
+    if Parsing.name = "unary_add" then (
         let init_tape = get_tape (str_to_charlst "1+1=") 0 initial
             (List.nth (str_to_charlst "1+1=") 0) in
         let fx = get_tape_trs init_tape in
@@ -216,6 +221,164 @@ let linear_regression () =
         let fx = get_tape_trs init_tape in
         x_array.(1) <- 8.;
         fx_array.(1) <- fx;
-        for i = 0 to 1 do
-            Printf.printf "x: %f, fx: %f\n" x_array.(i) fx_array.(i)
-        done
+
+        let init_tape = get_tape (str_to_charlst "1111111+1111111=") 0 initial
+            (List.nth (str_to_charlst "1111111+1111111=") 0) in
+        let fx = get_tape_trs init_tape in
+        x_array.(2) <- 16.;
+        fx_array.(2) <- fx;
+
+        let init_tape = get_tape (str_to_charlst "111111111111111+111111111111111=") 0 initial
+            (List.nth (str_to_charlst "111111111111111+111111111111111=") 0) in
+        let fx = get_tape_trs init_tape in
+        x_array.(3) <- 32.;
+        fx_array.(3) <- fx;
+
+        let init_tape = get_tape (str_to_charlst "1111111111111111111111111111111+1111111111111111111111111111111=")
+            0 initial (List.nth (str_to_charlst "1111111111111111111111111111111+1111111111111111111111111111111=")
+            0) in
+        let fx = get_tape_trs init_tape in
+        x_array.(4) <- 64.;
+        fx_array.(4) <- fx
+    )
+    else if Parsing.name = "is_palindrome" then (
+        let init_tape = get_tape (str_to_charlst "111=") 0 initial
+            (List.nth (str_to_charlst "111=") 0) in
+        let fx = get_tape_trs init_tape in
+        x_array.(0) <- 4.;
+        fx_array.(0) <- fx;
+
+        let init_tape = get_tape (str_to_charlst "1111111=") 0 initial
+            (List.nth (str_to_charlst "1111111=") 0) in
+        let fx = get_tape_trs init_tape in
+        x_array.(1) <- 8.;
+        fx_array.(1) <- fx;
+
+        let init_tape = get_tape (str_to_charlst "111111111111111=") 0 initial
+            (List.nth (str_to_charlst "111111111111111=") 0) in
+        let fx = get_tape_trs init_tape in
+        x_array.(2) <- 16.;
+        fx_array.(2) <- fx;
+
+        let init_tape = get_tape (str_to_charlst "1111111111111111111111111111111=") 0 initial
+            (List.nth (str_to_charlst "1111111111111111111111111111111=") 0) in
+        let fx = get_tape_trs init_tape in
+        x_array.(3) <- 32.;
+        fx_array.(3) <- fx;
+
+        let init_tape = get_tape (str_to_charlst "111111111111111111111111111111111111111111111111111111111111111=")
+            0 initial (List.nth (str_to_charlst "111111111111111111111111111111111111111111111111111111111111111=")
+            0) in
+        let fx = get_tape_trs init_tape in
+        x_array.(4) <- 64.;
+        fx_array.(4) <- fx
+    )
+    else if Parsing.name = "is_same_power" then (
+        let init_tape = get_tape (str_to_charlst "0011=") 0 initial
+            (List.nth (str_to_charlst "0011=") 0) in
+        let fx = get_tape_trs init_tape in
+        x_array.(0) <- 5.;
+        fx_array.(0) <- fx;
+
+        let init_tape = get_tape (str_to_charlst "00001111=") 0 initial
+            (List.nth (str_to_charlst "00001111=") 0) in
+        let fx = get_tape_trs init_tape in
+        x_array.(1) <- 9.;
+        fx_array.(1) <- fx;
+
+        let init_tape = get_tape (str_to_charlst "000000000111111111=") 0 initial
+            (List.nth (str_to_charlst "000000000111111111=") 0) in
+        let fx = get_tape_trs init_tape in
+        x_array.(2) <- 19.;
+        fx_array.(2) <- fx;
+
+        let init_tape = get_tape (str_to_charlst "00000000000000000001111111111111111111=") 0 initial
+            (List.nth (str_to_charlst "00000000000000000001111111111111111111=") 0) in
+        let fx = get_tape_trs init_tape in
+        x_array.(3) <- 39.;
+        fx_array.(3) <- fx;
+
+        let init_tape = get_tape (str_to_charlst "000000000000000000000000000000000000000111111111111111111111111111111111111111=")
+            0 initial (List.nth (str_to_charlst "000000000000000000000000000000000000000111111111111111111111111111111111111111=")
+            0) in
+        let fx = get_tape_trs init_tape in
+        x_array.(4) <- 79.;
+        fx_array.(4) <- fx
+    )
+    else if Parsing.name = "is_even" then (
+        let init_tape = get_tape (str_to_charlst "0000=") 0 initial
+            (List.nth (str_to_charlst "0000=") 0) in
+        let fx = get_tape_trs init_tape in
+        x_array.(0) <- 5.;
+        fx_array.(0) <- fx;
+
+        let init_tape = get_tape (str_to_charlst "00000000=") 0 initial
+            (List.nth (str_to_charlst "00000000=") 0) in
+        let fx = get_tape_trs init_tape in
+        x_array.(1) <- 9.;
+        fx_array.(1) <- fx;
+
+        let init_tape = get_tape (str_to_charlst "000000000000000000=") 0 initial
+            (List.nth (str_to_charlst "000000000000000000=") 0) in
+        let fx = get_tape_trs init_tape in
+        x_array.(2) <- 19.;
+        fx_array.(2) <- fx;
+
+        let init_tape = get_tape (str_to_charlst "00000000000000000000000000000000000000=") 0 initial
+            (List.nth (str_to_charlst "00000000000000000000000000000000000000=") 0) in
+        let fx = get_tape_trs init_tape in
+        x_array.(3) <- 39.;
+        fx_array.(3) <- fx;
+
+        let init_tape = get_tape (str_to_charlst "000000000000000000000000000000000000000000000000000000000000000000000000000000=")
+            0 initial (List.nth (str_to_charlst "000000000000000000000000000000000000000000000000000000000000000000000000000000=")
+            0) in
+        let fx = get_tape_trs init_tape in
+        x_array.(4) <- 79.;
+        fx_array.(4) <- fx
+    );
+    (* else if Parsing.name = "universal_tm" then ( *)
+    (*     let init_tape = get_tape (str_to_charlst "0000=") 0 initial *)
+    (*         (List.nth (str_to_charlst "0000=") 0) in *)
+    (*     let fx = get_tape_trs init_tape in *)
+    (*     x_array.(0) <- 5.; *)
+    (*     fx_array.(0) <- fx; *)
+
+    (*     let init_tape = get_tape (str_to_charlst "00000000=") 0 initial *)
+    (*         (List.nth (str_to_charlst "00000000=") 0) in *)
+    (*     let fx = get_tape_trs init_tape in *)
+    (*     x_array.(1) <- 9.; *)
+    (*     fx_array.(1) <- fx; *)
+
+    (*     let init_tape = get_tape (str_to_charlst "000000000000000000=") 0 initial *)
+    (*         (List.nth (str_to_charlst "000000000000000000=") 0) in *)
+    (*     let fx = get_tape_trs init_tape in *)
+    (*     x_array.(2) <- 19.; *)
+    (*     fx_array.(2) <- fx; *)
+
+    (*     let init_tape = get_tape (str_to_charlst "00000000000000000000000000000000000000=") 0 initial *)
+    (*         (List.nth (str_to_charlst "00000000000000000000000000000000000000=") 0) in *)
+    (*     let fx = get_tape_trs init_tape in *)
+    (*     x_array.(3) <- 39.; *)
+    (*     fx_array.(3) <- fx; *)
+
+    (*     let init_tape = get_tape (str_to_charlst "000000000000000000000000000000000000000000000000000000000000000000000000000000=") *)
+    (*         0 initial (List.nth (str_to_charlst "000000000000000000000000000000000000000000000000000000000000000000000000000000=") *)
+    (*         0) in *)
+    (*     let fx = get_tape_trs init_tape in *)
+    (*     x_array.(4) <- 79.; *)
+    (*     fx_array.(4) <- fx *)
+    (* ); *)
+
+    for i = 0 to 4 do
+        Printf.printf "x: %f, fx: %f\n" x_array.(i) fx_array.(i)
+    done;
+    let x_lst = [Pyfloat x_array.(0); Pyfloat x_array.(1); Pyfloat x_array.(2);
+        Pyfloat x_array.(3); Pyfloat x_array.(4)] in
+    let fx_lst = [Pyfloat fx_array.(0); Pyfloat fx_array.(1); Pyfloat fx_array.(2);
+        Pyfloat fx_array.(3); Pyfloat fx_array.(4)] in
+    let poly_pylst = get_list polyfit "my_polyfit" [Pylist x_lst; Pylist fx_lst; Pyint 2] in
+    let poly_floatlst = List.map (fun (Pyfloat x) -> x) poly_pylst in
+    Print.float_list poly_floatlst;
+    close py
+
