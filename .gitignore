@@ -6,3 +6,5 @@ a.out
 test
 *.cmo
 ._d
+__pycache__
+python_log
