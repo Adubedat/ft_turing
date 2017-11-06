@@ -8,4 +8,4 @@ val transitions: (Parsing.state * Parsing.transition list) list
 
 val print_intro: unit -> unit
 val launch_tape: unit -> unit
-val linear_regression: unit -> unit
+(*val linear_regression: unit -> unit*)

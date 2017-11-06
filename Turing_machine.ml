@@ -55,20 +55,20 @@ let print_time_complexity trs_count =
         else get_degree (acc // n) (nb +/ one)
     in
     if trs_count = one then
-        Printf.printf "\nTime complexity for n = %s and N = %s : O(1)\n" (string_of_num n) (string_of_num trs_count)
+        Printf.printf "\n\nTime complexity for n = %s and N = %s : O(1)" (string_of_num n) (string_of_num trs_count)
     else if trs_count >/ (fact_num n) then
-        Printf.printf "\nTime complexity for n = %s and N = %s : O(n!)\n" (string_of_num n) (string_of_num trs_count)
+        Printf.printf "\n\nTime complexity for n = %s and N = %s : O(n!)" (string_of_num n) (string_of_num trs_count)
     else if trs_count >/ (two **/ n) then
-        Printf.printf "\nTime complexity for n = %s and N = %s : O(2^n)\n" (string_of_num n) (string_of_num trs_count)
+        Printf.printf "\n\nTime complexity for n = %s and N = %s : O(2^n)" (string_of_num n) (string_of_num trs_count)
     else if (get_degree trs_count zero >/ zero) then (
         let degree = get_degree trs_count zero in
         if degree <=/ one then
-            Printf.printf "\nTime complexity for n = %s and N = %s : O(n)\n" (string_of_num n) (string_of_num trs_count)
+            Printf.printf "\n\nTime complexity for n = %s and N = %s : O(n)" (string_of_num n) (string_of_num trs_count)
         else
-            Printf.printf "\nTime complexity for n = %s and N = %s : O(n^%s)\n" (string_of_num n) (string_of_num trs_count) (string_of_num degree)
+            Printf.printf "\n\nTime complexity for n = %s and N = %s : O(n^%s)" (string_of_num n) (string_of_num trs_count) (string_of_num degree)
     )
     else (
-        Printf.printf "\nTime complexity for n = %s and N = %s : O(logn)\n" (string_of_num n) (string_of_num trs_count)
+        Printf.printf "\n\nTime complexity for n = %s and N = %s : O(logn)" (string_of_num n) (string_of_num trs_count)
     )
 
 let str_to_charlst str =
@@ -142,7 +142,6 @@ let launch_tape () =
         let pos = get_pos tape in
         let tape_letters = get_letters tape letter_to_wr in
         if List.exists (fun x -> x = next_trs) finals then (
-            (* Printf.printf "trs: %s, wr: %c, pos: %d\n" (next_trs) (letter_to_wr) (pos); *)
             if List.length tape_letters = pos then (
                 let tape_letters = tape_letters @ ['.'] in
                 let final_tape = get_tape tape_letters pos next_trs (List.nth tape_letters pos) in
@@ -201,7 +200,7 @@ let get_tape_trs tape_init =
     in
     tape_move (tape_init)
 
-open Lymp
+(*open Lymp
 let interpreter = "/Users/rporcon/.brew/bin/python3"
 let py = init "."
 let polyfit = get_module py "polyfit"
@@ -386,4 +385,4 @@ let linear_regression () =
     Owl.Plot.plot_fun ~h f 1. 100.;
     Owl.Plot.output h;
     close py
-
+*)
