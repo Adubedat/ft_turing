@@ -375,7 +375,15 @@ let linear_regression () =
         Pyfloat fx_array.(3); Pyfloat fx_array.(4)] in
     let poly_pylst = get_list polyfit "my_polyfit" [Pylist x_lst; Pylist fx_lst; Pyint 2] in
     let poly_floatlst = List.map (fun (Pyfloat x) -> x) poly_pylst in
-    let f x = (List.nth poly_floatlst 0) *. (x ** 2.) +. (List.nth poly_floatlst 1) *. x +. (List.nth poly_floatlst 2) in
-    Owl.Plot.plot_fun f 1. 100.;
+    let a = List.nth poly_floatlst 0 in
+    let b = List.nth poly_floatlst 1 in
+    let c = List.nth poly_floatlst 2 in
+    let f x = a *. (x ** 2.) +. b *. x +. c in
+    let h = Owl.Plot.create ("graph_" ^ Parsing.name ^ ".png") in
+    Owl.Plot.set_title h ("Function: f(x) = " ^ (string_of_float a) ^ "x² + " ^ (string_of_float b) ^ "x + " ^ (string_of_float c));
+    Owl.Plot.set_xlabel h "Input length";
+    Owl.Plot.set_ylabel h "Operation number";
+    Owl.Plot.plot_fun ~h f 1. 100.;
+    Owl.Plot.output h;
     close py
 
