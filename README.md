@@ -1,5 +1,5 @@
 # ft_turing
-Creation of a turing machine / universal turing machine
+Creation of an universal turing machine
 
 We were two on this project.
 
