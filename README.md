@@ -9,7 +9,7 @@ For example our turing machine can compute fonction like is_palindrome(words tha
 
 Example: `./turing_machine json/is_palindrome.json "110011="`
 
-Our turing machine is universal because it is able to take an other turing machine as input amd simulate it (`json/universal_tm.json`)
+Our turing machine is universal because it is able to take an other turing machine as input and simulate it (`json/universal_tm.json`)
 
 We also have a graphical representation of time complexity for any turing machine computation.
 
